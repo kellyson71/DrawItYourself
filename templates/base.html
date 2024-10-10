@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/global.css' %}" >
+    <link rel="stylesheet" href="{% static 'css/base.css' %}" >
+    <script src="https://kit.fontawesome.com/5611eca8ce.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header class="page-header">
+        <h1 class="logo-container">
+            <img class="logo" src="{% static 'imgs/draw-it-yourself-logo.png' %}" >
+            <p>DrawItYourself</p>
+        </h1>
+
+        <div class="header-options">
+            <div class="actions-container">
+                <form class="search-container">
+                    <input placeholder="Procurar">
+                    <button>
+                        <i class="fa-solid fa-search"></i>
+                    </button>
+                </form>
+                
+                <a href="#">
+                    <button class="create-post-button">
+                        <i class="fa-solid fa-pencil"></i>
+                    </button>
+                </a>
+            </div>
+            
+            <div class="user-avatar">
+                <img>
+            </div>
+        </div>
+    </header>
+</body>
+</html>
