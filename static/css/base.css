@@ -1,0 +1,25 @@
+.page-header {
+    width: 100%;
+    height: 7.5rem;
+    padding: 1.5rem 1rem;
+
+    background-color: var(--blue-1);
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.logo {
+    width: 3.375rem;
+}
+
+.logo-container p {
+    font-size: 3rem;
+    font-family: Poppins;
+    font-weight: 700;
+
+    color: white;
+}
