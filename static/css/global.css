@@ -49,6 +49,7 @@
     --blue-2: #00B4CC;
     --gray-1: #79747E;
     --gray-2: #ECE6F0;
+    --purple-1: #65558F;
 }
 
 * {
@@ -56,4 +57,5 @@
     margin: 0;
     padding: 0;
     line-height: 1.5;
+    font-family: Poppins;
 }

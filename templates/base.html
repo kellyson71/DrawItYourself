@@ -37,5 +37,25 @@
             </div>
         </div>
     </header>
+
+    <div class="page-content">
+        <div class="navbar">
+            <nav>
+                <ul>
+                    <a href="/">
+                        <li class="navbar-item"><i class="fa-solid fa-home"></i> <p>Home</p></li>
+                    </a>
+                    <a href="/favorites">
+                        <li class="navbar-item"><i class="fa-solid fa-star"></i> <p>Favorites</p></li>
+                    </a>
+                </ul>
+            </nav>
+        </div>
+
+        <main class="main-content">
+            {% block main %}
+            {% endblock %}
+        </main>
+    </div>
 </body>
 </html>
