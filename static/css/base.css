@@ -125,6 +125,14 @@
     text-decoration: none;
 }
 
+.navbar nav {
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
 .navbar-item {
     width: 100%;
     height: 3.125rem;
