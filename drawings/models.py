@@ -20,6 +20,12 @@ class Post(models.Model):
     modified_at = models.DateTimeField()
     tags = models.ManyToManyField(Tag)
 
+    def get_drawing_pages(self):
+        if self.type == 'REGULAR':
+            return PostItem.objects.filter(post=self)
+        else:
+            return ComicPage.objects.filter(post=self)
+
     def __str__(self) -> str:
         return f"{self.author} | {self.title}"
 

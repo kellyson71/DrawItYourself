@@ -1,0 +1,62 @@
+.page-container {
+    padding: 2.25rem 6.25rem;
+}
+
+.post-item {
+    border: 0.0625rem solid var(--gray-2);
+    border-radius: 0.75rem;
+
+    overflow: hidden;
+}
+
+.author-info {
+    padding: 1rem;
+
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.author-avatar img {
+    width: 2.5rem;
+    height: 2.5rem;
+
+    object-fit: cover;
+}
+
+.post-main-image {
+    height: 27.75rem;
+
+    border: 0.0625rem solid var(--gray-2);
+}
+
+.post-main-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.post-footer {
+    padding: 1rem;
+
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.post-title {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.post-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem
+}
+
+@media (max-width: 768px) {
+    .page-container {
+        padding: 2rem 2rem;
+    }
+}

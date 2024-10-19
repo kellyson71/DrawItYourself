@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'index.css' %}">
+{% endblock %}
+
+{% block main %}
+<div class="page-container">
+    {% for post in posts %}
+    <article class="post-item">
+        <header class="author-info">
+            <div class="author-avatar">
+                <img src="{{post.author.avatar.url}}">
+            </div>
+    
+            <p>{{post.author.full_name}}</p>
+        </header>
+    
+        <div class="post-main-image">
+            <img src="{{ post.get_drawing_pages.0.image.url }}">
+        </div>
+        
+        <footer class="post-footer">
+            <div class="post-info">
+                <h2 class="post-title">
+                    {{post.title}}
+                </h2>
+                <p class="post-description">
+                    {{ post.description }}
+                </p>
+            </div>
+
+            <div class="post-buttons">
+                <button class="custom-button hollow">Ver Mais</button>
+                <button class="custom-button full">Seguir Artista</button>
+            </div>
+        </footer>
+    </article>
+    {% endfor %}
+</div>
+
+{% endblock %}
