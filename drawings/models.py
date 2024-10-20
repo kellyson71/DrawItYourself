@@ -24,7 +24,7 @@ class Post(models.Model):
         if self.type == 'REGULAR':
             return PostItem.objects.filter(post=self)
         else:
-            return ComicPage.objects.filter(post=self)
+            return ComicPage.objects.filter(post=self).order_by('page_order')
 
     def __str__(self) -> str:
         return f"{self.author} | {self.title}"

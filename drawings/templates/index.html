@@ -4,7 +4,7 @@
 {% block title %}Home{% endblock %}
 
 {% block head %}
-<link rel="stylesheet" href="{% static 'index.css' %}">
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
 {% endblock %}
 
 {% block main %}
@@ -25,9 +25,9 @@
         
         <footer class="post-footer">
             <div class="post-info">
-                <h2 class="post-title">
+                <h3 class="post-title">
                     {{post.title}}
-                </h2>
+                </h3>
                 <p class="post-description">
                     {{ post.description }}
                 </p>
