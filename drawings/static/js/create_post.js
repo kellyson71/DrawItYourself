@@ -1,31 +1,31 @@
 window.addEventListener('load', () => {
 
-    const hoverImageSpace = document.getElementById('hover-image-space')
-    let imageForms = document.querySelectorAll('.image-form')
-    let imageContainer = document.getElementById('image-cards-container')
-    let totalFormsElement = document.getElementById('id_postitem_set-TOTAL_FORMS')
+    // const hoverImageSpace = document.getElementById('hover-image-space')
+    // let imageForms = document.querySelectorAll('.image-form')
+    // let imageContainer = document.getElementById('image-cards-container')
+    // let totalFormsElement = document.getElementById('id_postitem_set-TOTAL_FORMS')
 
-    let nextFormIndex = imageForms.length - 1
+    // let nextFormIndex = imageForms.length - 1
 
-    hoverImageSpace.setAttribute('for', `id_postitem_set-${nextFormIndex}-image`)
+    // hoverImageSpace.setAttribute('for', `id_postitem_set-${nextFormIndex}-image`)
 
-    function addForm() {
-        e.preventDefault()
+    // function addForm() {
+    //     e.preventDefault()
 
-        let newForm = imageForms[0].cloneNode(true)
-        let formRegex = RegExp(`postitem_set-(\\d){1}-`, 'g')
+    //     let newForm = imageForms[0].cloneNode(true)
+    //     let formRegex = RegExp(`postitem_set-(\\d){1}-`, 'g')
 
-        newForm.innerHTML = newForm.innerHTML.replace(formRegex, `postitem_set-${nextFormIndex}-`)
-        imageContainer.append(newForm)
-        hoverImageSpace.setAttribute('for', `id_postitem_set-${nextFormIndex}-image`)
+    //     newForm.innerHTML = newForm.innerHTML.replace(formRegex, `postitem_set-${nextFormIndex}-`)
+    //     imageContainer.append(newForm)
+    //     hoverImageSpace.setAttribute('for', `id_postitem_set-${nextFormIndex}-image`)
 
-        nextFormIndex++
-        totalFormsElement.setAttribute('value', `${nextFormIndex}`)
-    }
+    //     nextFormIndex++
+    //     totalFormsElement.setAttribute('value', `${nextFormIndex}`)
+    // }
 
-    function handleImageChange(e) {
+    // function handleImageChange(e) {
 
-    }
+    // }
 })
 
 // let birdForm = document.querySelectorAll(".bird-form")
