@@ -43,7 +43,7 @@
             {{ post_form.description }}
         </label>
 
-        <!-- <div id="image-cards-container">
+        <div id="image-cards-container">
             {{ postitem_formset.management_form }}
             {% for post_item in postitem_formset %}
                 <article id="post-image-card-{{forloop.counter0}}" class="image-form invisible">
@@ -51,18 +51,18 @@
                     {{ post_item.image_legend }}
                 </article>
             {% endfor %}
-        </div>  -->
+        </div>
 
-        <!-- <label id="hover-image-space" class="hover-image-space">
+        <label id="hover-image-space" class="hover-image-space">
             <p>Arraste e solte ou carregue as imagens</p>
-        </label> -->
+        </label> 
 
-        <label class="image-field">
+        {% comment %} <label class="image-field">
             {{ post_form.image }}
 
             Escolha uma imagem
             <img id="image-preview">
-        </label>
+        </label> {% endcomment %}
 
         <button class="custom-button full" type="submit">Enviar</button>
     </form>
