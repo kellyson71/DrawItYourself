@@ -12,15 +12,34 @@
     {% for post in posts %}
     <article class="post-item">
         <header class="author-info">
-            <div class="author-avatar">
-                <img src="{{post.author.avatar.url}}">
+            <div>
+                <div class="author-avatar">
+                    {% if post.author.avatar %}
+                    <img src="{{post.author.avatar.url}}">
+                    {% else %}
+                    {{ post.author.username.0 }}
+                    {% endif %}
+                </div>
+        
+                <p>{{post.author.full_name}}</p>
             </div>
-    
-            <p>{{post.author.full_name}}</p>
+
+            <div class="c-buttons">
+                <a href="{% url 'edit_post' post.id %}">
+                    <button class="custom-button full">
+                        <i class="fa-solid fa-pencil"></i>
+                    </button>
+                </a>
+                <a href="{% url 'delete_post' post.id %}">
+                    <button class="custom-button hollow">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </a>
+            </div>
         </header>
     
         <div class="post-main-image">
-            <img src="{{ post.get_drawing_pages.0.image.url }}">
+            <img src="{{ post.image.url }}">
         </div>
         
         <footer class="post-footer">

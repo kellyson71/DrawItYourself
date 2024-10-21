@@ -1,5 +1,9 @@
 .page-container {
     padding: 2.25rem 6.25rem;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
 .post-item {
@@ -14,14 +18,34 @@
 
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 1rem;
 }
 
-.author-avatar img {
+.author-avatar {
     width: 2.5rem;
     height: 2.5rem;
+    border-radius: 50%;
 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: var(--purple-1);
+    color: white;
+}
+
+.author-avatar img {
     object-fit: cover;
+}
+
+.c-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.c-buttons a {
+    text-decoration: none;
 }
 
 .post-main-image {

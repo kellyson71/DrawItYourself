@@ -1,5 +1,30 @@
 window.addEventListener('load', () => {
 
+    const imageInput = document.getElementById('image-input')
+    const imagePreview = document.getElementById('image-preview')
+    console.log("HERE")
+    console.log(imageInput.files)
+
+    if (imageInput.files.length !== 0){
+        loadImage()
+    }
+
+    imageInput.addEventListener('change', () => {
+        loadImage()        
+    })
+
+    function loadImage() {
+        const files = imageInput.files
+
+        if (files.length === 0) 
+            return
+    
+        const blob = URL.createObjectURL(files[0])
+
+        imagePreview.src = blob
+        imagePreview.classList.remove('invisible')
+    }
+
     // const hoverImageSpace = document.getElementById('hover-image-space')
     // let imageForms = document.querySelectorAll('.image-form')
     // let imageContainer = document.getElementById('image-cards-container')

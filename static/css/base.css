@@ -90,6 +90,12 @@
     background-color: #cfc7d5;
 }
 
+.user-info-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
 .user-avatar {
     width: 3rem;
     height: 3rem;

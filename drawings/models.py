@@ -23,7 +23,7 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)  
     title = models.CharField(max_length=100)
     description = models.TextField()
-    image = models.ImageField(upload_to='images/', default='default_image.jpg')  # Define um valor padrão
+    image = models.ImageField(upload_to='images/')  # Define um valor padrão
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 

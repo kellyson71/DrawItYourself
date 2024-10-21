@@ -35,31 +35,64 @@ def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     return render(request, 'post_detail.html', {'post': post})
     
-@login_required
+# @login_required
 def create_post(request):
     PostItemFormSet = inlineformset_factory(Post, PostItem, fields=('image', 'image_legend'), extra=1)
     
     if request.method == 'POST':
-        post_form = CreatePostForm(request.POST, request.FILES)
-        postitem_formset = PostItemFormSet(request.POST, request.FILES)
+        post_form = PostForm(request.POST, request.FILES)
+        # postitem_formset = PostItemFormSet(request.POST, request.FILES)
         
-        if post_form.is_valid() and postitem_formset.is_valid():
+        if post_form.is_valid():
             post = post_form.save(commit=False)
             post.author = request.user
             post.save()
             
-            post_items = postitem_formset.save(commit=False)
-            for post_item in post_items:
-                post_item.post = post
-                post_item.save()
+            # post_items = postitem_formset.save(commit=False)
+            # for post_item in post_items:
+            #     post_item.post = post
+            #     post_item.save()
                 
             # return redirect('post_detail', post_id=post.id)
             return redirect('main-page')
     else:
-        post_form = CreatePostForm()
-        postitem_formset = PostItemFormSet(queryset=PostItem.objects.none())
+        post_form = PostForm()
+        # postitem_formset = PostItemFormSet(queryset=PostItem.objects.none())
     
     return render(request, 'create_post.html', {
-        'post_form': post_form, 
-        'postitem_formset': postitem_formset
+        'post_form': post_form
+        # 'postitem_formset': postitem_formset
+    })
+
+def delete_post(request, post_id):
+    Post.objects.get(id=post_id).delete()
+
+    return redirect('main-page')
+
+def edit_post(request, post_id):
+    post = Post.objects.get(id=post_id)
+
+    if request.method == 'POST':
+        post_form = PostForm(request.POST, request.FILES, instance=post)
+        # postitem_formset = PostItemFormSet(request.POST, request.FILES)
+        
+        if post_form.is_valid():
+            post = post_form.save(commit=False)
+            post.author = request.user
+            post.save()
+            
+            # post_items = postitem_formset.save(commit=False)
+            # for post_item in post_items:
+            #     post_item.post = post
+            #     post_item.save()
+                
+            # return redirect('post_detail', post_id=post.id)
+            return redirect('main-page')
+    else:
+        post_form = PostForm(instance=post, initial={ 'image': post.image.url })
+        # postitem_formset = PostItemFormSet(queryset=PostItem.objects.none())
+    
+    return render(request, 'create_post.html', {
+        'post_form': post_form
+        # 'postitem_formset': postitem_formset
     })
