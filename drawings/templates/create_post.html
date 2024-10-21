@@ -53,9 +53,14 @@
             {% endfor %}
         </div>
 
-        <label id="hover-image-space" class="hover-image-space">
-            <p>Arraste e solte ou carregue as imagens</p>
-        </label> 
+<label for="image-input" id="hover-image-space" class="hover-image-space">
+    <p id="placeholder-text">Arraste e solte ou carregue as imagens</p>
+    <input type="file" name="image" id="image-input" accept="image/*" multiple hidden> <!-- O input está oculto -->
+</label>
+
+
+
+
 
         {% comment %} <label class="image-field">
             {{ post_form.image }}

@@ -75,49 +75,59 @@ window.addEventListener('load', () => {
 // }
 
 // previnir funçao padrao do navegador
-function preventDefaults(e) {
-    e.preventDefault()
-    e.stopPropagation()
-}
+window.addEventListener('load', () => {
+    const imageInput = document.getElementById('image-input'); // Campo de input (invisível)
+    const dropArea = document.getElementById('hover-image-space'); // Área de arraste e solta
+    const placeholderText = document.getElementById('placeholder-text'); // Texto inicial de placeholder
+    const imagePreview = document.createElement('img'); // Criar um elemento img para a prévia
+    dropArea.appendChild(imagePreview); // Adiciona a prévia na área de drop
 
-// pegar o arraste e solte pelo id
-let dropArea = document.getElementById('hover-image-space')
+    // Lógica para carregar e mostrar a imagem
+    function loadImage(files) {
+        if (files.length === 0) return;
 
-dropArea.addEventListener('dragenter', preventDefaults, false)
-dropArea.addEventListener('dragover', preventDefaults, false)
-dropArea.addEventListener('dragleave', preventDefaults, false)
-dropArea.addEventListener('drop', preventDefaults, false)
+        const blob = URL.createObjectURL(files[0]); // Criar uma URL temporária para a imagem
+        imagePreview.src = blob; // Definir a URL como a fonte da imagem
+        imagePreview.classList.remove('invisible'); // Mostrar a prévia da imagem
+        imagePreview.style.maxWidth = '100%'; // Ajustar o tamanho da imagem
+        imagePreview.style.height = 'auto'; // Ajustar a altura proporcionalmente
 
-// evento para quando a imagem for solta
-dropArea.addEventListener('drop', handleDrop, false)
-
-function handleDrop(e) {
-    let dt = e.dataTransfer
-    let files = dt.files
-    
-    // pra dps
-    handleFiles(files)
-}
-
-function handleFiles(files) {
-    let file = files[0]
-
-    // FileReader para exibir a imagem 
-    let reader = new FileReader()
-    reader.readAsDataURL(file)
-    
-    reader.onloadend = function() {
-        // Limpar imagens do dropbox
-        let dropArea = document.querySelector('#hover-image-space')
-        dropArea.innerHTML = ""
-
-        let img = document.createElement('img')
-        img.src = reader.result
-
-        // Adicionar a imagem
-        dropArea.appendChild(img)
+        // Esconde o texto de placeholder assim que a imagem for carregada
+        if (placeholderText) {
+            placeholderText.style.display = 'none';
+        }
     }
 
-    document.querySelector('input[type="file"]').files = files
-}
+    // Quando o input de arquivo mudar (imagem selecionada manualmente)
+    imageInput.addEventListener('change', () => {
+        loadImage(imageInput.files); // Carregar a imagem selecionada
+    });
 
+    // Prevenir comportamento padrão em arrastar e soltar
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    // Eventos de arraste na área de drop
+    dropArea.addEventListener('dragenter', preventDefaults, false);
+    dropArea.addEventListener('dragover', preventDefaults, false);
+    dropArea.addEventListener('dragleave', preventDefaults, false);
+    dropArea.addEventListener('drop', preventDefaults, false);
+
+    // Lógica ao soltar a imagem na área de drop
+    dropArea.addEventListener('drop', handleDrop, false);
+
+    function handleDrop(e) {
+        let dt = e.dataTransfer;
+        let files = dt.files;
+
+        // Atribuir a imagem arrastada ao input invisível
+        let dataTransfer = new DataTransfer();
+        dataTransfer.items.add(files[0]);
+        imageInput.files = dataTransfer.files;
+
+        // Carregar e mostrar a imagem arrastada
+        loadImage(files);
+    }
+});
