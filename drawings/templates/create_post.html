@@ -18,6 +18,8 @@
     </h2>
 
     <form method="post" enctype="multipart/form-data" class="create-post-form">
+        {% comment %} token CSRF (Cross-Site Request Forgery) (django pediu, aparentimente é pra segurança) {% endcomment %}
+        {% csrf_token %}
         <div class="questionnaire-type">
             <div>
                 <input id="type-1" name="type" value="REGULAR" checked type="radio">
@@ -49,7 +51,7 @@
                     {{ post_item.image_legend }}
                 </article>
             {% endfor %}
-        </div>
+        </div> 
 
         <label id="hover-image-space" class="hover-image-space">
             <p>Arraste e solte ou carregue as imagens</p>

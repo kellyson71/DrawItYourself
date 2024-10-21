@@ -12,6 +12,13 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+
+LOGIN_REDIRECT_URL = 'main-page'
+LOGOUT_REDIRECT_URL = '/'  
+LOGIN_URL = '/login/' 
 
 #LOAD .ENV
 from dotenv import load_dotenv
@@ -46,8 +53,8 @@ INSTALLED_APPS = [
     'users',
     'drawings'
 ]
-LOGIN_REDIRECT_URL = "chat-page"
-LOGOUT_REDIRECT_URL = "login-user"
+# LOGIN_REDIRECT_URL = "chat-page"
+# LOGOUT_REDIRECT_URL = "login-user"
 ASGI_APPLICATION = 'core.asgi.application'
 CHANNEL_LAYERS = {
     "default": {

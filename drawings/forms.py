@@ -1,5 +1,11 @@
 from django.forms import ModelForm, TextInput, RadioSelect, Textarea, FileInput
 from .models import Post, PostItem
+from django import forms
+
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ['title', 'description', 'image'] 
 
 class CreatePostForm(ModelForm):
     class Meta:

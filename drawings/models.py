@@ -1,6 +1,5 @@
 from django.db import models
-from users.models import User
-
+from django.contrib.auth.models import User
 class Tag(models.Model):
     name = models.CharField(max_length=50)
 
@@ -12,13 +11,21 @@ class Post(models.Model):
         COMIC: 'COMIC'
     }
 
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    # author = models.ForeignKey(User, on_delete=models.CASCADE)
+    # title = models.CharField(max_length=100)
+    # description = models.TextField()
+    type = models.CharField(choices=POST_TYPES, max_length=30)
+    # created_at = models.DateTimeField(auto_now_add=True) 
+    # modified_at = models.DateTimeField(auto_now=True)   
+    tags = models.ManyToManyField(Tag)
+    # author = models.ForeignKey(User, on_delete=models.CASCADE) 
+
+    author = models.ForeignKey(User, on_delete=models.CASCADE)  
     title = models.CharField(max_length=100)
     description = models.TextField()
-    type = models.CharField(choices=POST_TYPES, max_length=30)
-    created_at = models.DateTimeField()
-    modified_at = models.DateTimeField()
-    tags = models.ManyToManyField(Tag)
+    image = models.ImageField(upload_to='images/', default='default_image.jpg')  # Define um valor padrão
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
 
     def get_drawing_pages(self):
         if self.type == 'REGULAR':
