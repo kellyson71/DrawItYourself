@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block main %}
+<div class="flex justify-center items-center min-h-screen bg-gray-50">
+    <div class="bg-white p-10 rounded-lg shadow-lg w-full max-w-md">
+        <h2 class="text-3xl font-bold mb-6 text-center text-[#008C9E]">Login</h2>
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            <div class="flex flex-col">
+                <label for="username" class="text-sm font-medium text-gray-700">Username:</label>
+                <input 
+                    type="text" 
+                    name="username" 
+                    id="username" 
+                    required 
+                    class="mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#008C9E] focus:border-[#008C9E]"
+                >
+            </div>
+            <div class="flex flex-col">
+                <label for="password" class="text-sm font-medium text-gray-700">Password:</label>
+                <input 
+                    type="password" 
+                    name="password" 
+                    id="password" 
+                    required 
+                    class="mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#008C9E] focus:border-[#008C9E]"
+                >
+            </div>
+            <button 
+                type="submit" 
+                class="w-full py-2 px-4 bg-[#008C9E] text-white font-semibold rounded-md shadow-md hover:bg-[#007A89] focus:outline-none focus:ring-2 focus:ring-[#008C9E] focus:ring-opacity-50"
+            >
+                Entrar
+            </button>
+        </form>
+        <p class="mt-4 text-center text-gray-500">Não tem uma conta? 
+            <a href="{% url 'signup' %}" class="text-[#008C9E] hover:text-[#007A89]">Crie uma agora</a>
+        </p>
+    </div>
+</div>
+<script type="module">
+  import { setup } from 'https://cdn.skypack.dev/twind/shim';
+  setup({});
+</script>
+
+{% endblock %}

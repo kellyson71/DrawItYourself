@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Create Post{% endblock %}
+
+{% block head %}
+
+<link rel="stylesheet" href="{% static 'css/create_post.css' %}">
+
+{% endblock %}
+
+{% block main %}
+
+<div class="page-container">
+    <h2 class="page-title">
+        <i class="fa-solid fa-pencil"></i>
+        Criar Postagem
+    </h2>
+
+    <form method="post" enctype="multipart/form-data" class="create-post-form">
+        {% comment %} token CSRF (Cross-Site Request Forgery) (django pediu, aparentimente é pra segurança) {% endcomment %}
+        {% csrf_token %}
+        <div class="questionnaire-type">
+            <div>
+                <input id="type-1" name="type" value="REGULAR" checked type="radio">
+                <label for="type-1">
+                    Desenho Simples
+                </label>
+            </div>
+            <div>
+                <input id="type-2" name="type" value="COMIC" type="radio">
+                <label for="type-2">
+                    História em Quadrinhos
+                </label>
+            </div>
+        </div>
+
+        {{ post_form.title }}
+
+        <label class="description-label" for="id_description">
+            Descrição
+
+            {{ post_form.description }}
+        </label>
+
+        <div id="image-cards-container">
+            {{ postitem_formset.management_form }}
+            {% for post_item in postitem_formset %}
+                <article id="post-image-card-{{forloop.counter0}}" class="image-form invisible">
+                    {{ post_item.image }}
+                    {{ post_item.image_legend }}
+                </article>
+            {% endfor %}
+        </div>
+
+<label for="image-input" id="hover-image-space" class="hover-image-space">
+    <p id="placeholder-text">Arraste e solte ou carregue as imagens</p>
+    <input type="file" name="image" id="image-input" accept="image/*" multiple hidden> <!-- O input está oculto -->
+</label>
+
+
+
+
+
+        {% comment %} <label class="image-field">
+            {{ post_form.image }}
+
+            Escolha uma imagem
+            <img id="image-preview">
+        </label> {% endcomment %}
+
+        <button class="custom-button full" type="submit">Enviar</button>
+    </form>
+</div>
+
+<script src="{% static 'js/create_post.js' %}"></script>
+{% endblock %}

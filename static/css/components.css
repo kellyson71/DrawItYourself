@@ -1,0 +1,40 @@
+.custom-button {
+    padding: 0.625rem 1.5rem;
+    border-radius: 40rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.625rem;
+
+    font-size: 1rem;
+
+    outline: none;
+
+    cursor: pointer;
+}
+
+.custom-button:disabled {
+    cursor: default;
+}
+
+.custom-button.hollow {
+    border: 0.0625rem solid var(--gray-1);
+    
+    background: none;
+    color: var(--purple-1);
+}
+
+.custom-button.full {
+    border: 0.0625rem solid var(--purple-1);
+
+    background: var(--purple-1);
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .custom-button {
+        font-size: 0.75rem;
+        padding: 0.625rem 1rem;
+    }
+}
