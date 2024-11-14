@@ -11,19 +11,12 @@ class Post(models.Model):
         COMIC: 'COMIC'
     }
 
-    # author = models.ForeignKey(User, on_delete=models.CASCADE)
-    # title = models.CharField(max_length=100)
-    # description = models.TextField()
     type = models.CharField(choices=POST_TYPES, max_length=30)
-    # created_at = models.DateTimeField(auto_now_add=True) 
-    # modified_at = models.DateTimeField(auto_now=True)   
     tags = models.ManyToManyField(Tag)
-    # author = models.ForeignKey(User, on_delete=models.CASCADE) 
 
     author = models.ForeignKey(User, on_delete=models.CASCADE)  
     title = models.CharField(max_length=100)
     description = models.TextField()
-    image = models.ImageField(upload_to='images/')  # Define um valor padrão
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
