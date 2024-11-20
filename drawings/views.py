@@ -7,13 +7,25 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import PostForm
 from django.shortcuts import get_object_or_404
+from django.core.paginator import Paginator
 
-# Create your views here.
+POSTS_PER_PAGE = 3
+
 def drawings_list(request):
-    posts = Post.objects.all()
+    all_posts = Post.objects.all()
+    paginator = Paginator(all_posts, POSTS_PER_PAGE)
+
+    page = request.GET.get('p', 1)
+
+    try:
+        posts = paginator.get_page(page)
+    except:
+        page = 1
+        posts = paginator.get_page(1)
 
     context = {
-        'posts': posts
+        'posts': posts,
+        'page': page
     }
 
     return render(request, 'index.html', context)
