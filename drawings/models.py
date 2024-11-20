@@ -34,6 +34,9 @@ class PostItem(models.Model):
     image_legend = models.CharField(max_length=150, blank=True)
     image = models.ImageField(upload_to='post-items/')
 
+    def get_image_path(self):
+        return "A"
+
     def __str__(self):
         return f"{self.post.author} | {self.post.title} | {self.image_legend}"
 

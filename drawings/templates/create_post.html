@@ -47,6 +47,9 @@
             {{ postitem_formset.management_form }}
             {% for post_item in postitem_formset %}
                 <article id="post-image-card-{{forloop.counter0}}" class="image-form">
+                    {% if post_item.image.value %}
+                    <img src="{{ post_item.image.value.url }}">
+                    {% endif %}
                     {{ post_item.image }}
                     {{ post_item.image_legend }}
                 </article>
