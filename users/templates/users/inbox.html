@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Caixa de Entrada{% endblock %}
+
+{% block head %}
+<style>
+    .inbox-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 1rem;
+    }
+
+    .inbox-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .inbox-header h1 {
+        color: #008C9E;
+        font-size: 1.8rem;
+    }
+
+    .message-list {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+
+    .message-item {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        border-bottom: 1px solid #eee;
+        transition: background-color 0.2s;
+    }
+
+    .message-item:last-child {
+        border-bottom: none;
+    }
+
+    .message-item:hover {
+        background-color: #f8f9fa;
+        cursor: pointer;
+    }
+
+    .sender-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #008C9E;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 500;
+        margin-right: 1rem;
+    }
+
+    .message-content {
+        flex: 1;
+    }
+
+    .message-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+    }
+
+    .sender-name {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .message-time {
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    .message-preview {
+        color: #666;
+        font-size: 0.95rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .message-indicators {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-left: 1rem;
+    }
+
+    .indicator {
+        color: #008C9E;
+        font-size: 1.2rem;
+    }
+
+    .empty-inbox {
+        text-align: center;
+        padding: 3rem;
+        color: #666;
+    }
+
+    .empty-inbox i {
+        font-size: 3rem;
+        color: #008C9E;
+        margin-bottom: 1rem;
+    }
+
+    .empty-inbox p {
+        font-size: 1.1rem;
+    }
+
+    .message-item.unread {
+        background-color: #f0f9fa;
+        font-weight: 500;
+    }
+    
+    .unread-indicator {
+        width: 8px;
+        height: 8px;
+        background: #008C9E;
+        border-radius: 50%;
+        margin-right: 1rem;
+    }
+</style>
+{% endblock %}
+
+{% block main %}
+<div class="inbox-container">
+    <div class="inbox-header">
+        <h1>Caixa de Entrada</h1>
+    </div>
+
+    <div class="message-list">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message-item {% if not message.is_read %}unread{% endif %}" onclick="window.location='{% url 'users:chat_detail' message.sender.username %}'">
+                    {% if not message.is_read %}
+                        <div class="unread-indicator"></div>
+                    {% endif %}
+                    <div class="sender-avatar">
+                        {{ message.sender.username.0 }}
+                    </div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="sender-name">{{ message.sender.username }}</span>
+                            <span class="message-time">{{ message.created_at|timesince }}</span>
+                        </div>
+                        <div class="message-preview">
+                            {{ message.content }}
+                        </div>
+                    </div>
+                    <div class="message-indicators">
+                        {% if message.has_image %}
+                            <i class="fas fa-image indicator" title="Contém imagem"></i>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-inbox">
+                <i class="far fa-envelope"></i>
+                <p>Sua caixa de entrada está vazia</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

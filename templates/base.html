@@ -59,12 +59,18 @@
                     <a href="/">
                         <li class="navbar-item"><i class="fa-solid fa-home"></i> <p>Home</p></li>
                     </a>
-                    <a href="/favorites">
+                    <a href="{% url 'favorites' %}">
                         <li class="navbar-item"><i class="fa-solid fa-star"></i> <p>Favorites</p></li>
+                    </a>
+                    <a href="{% url 'likes' %}">
+                        <li class="navbar-item"><i class="fa-solid fa-heart"></i> <p>Curtidos</p></li>
+                    </a>
+                    <a href="{% url 'users:following_artists' %}">
+                        <li class="navbar-item"><i class="fa-solid fa-users"></i> <p>Artistas seguindo</p></li>
                     </a>
                 </ul>
 
-                <a href="/">
+                <a href="{% url 'users:inbox' %}">
                     <li class="navbar-item"><i class="fa-solid fa-inbox"></i> <p>Caixa de Entrada</p></li>
                 </a>
             </nav>

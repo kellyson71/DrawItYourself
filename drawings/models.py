@@ -33,6 +33,9 @@ class Post(models.Model):
         else:
             return ComicPage.objects.filter(post=self).order_by('page_order')
 
+    def is_liked_by(self, user):
+        return Like.objects.filter(post=self, user=user).exists()
+
     def __str__(self) -> str:
         return f"{self.author} | {self.title}"
 

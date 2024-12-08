@@ -7,6 +7,120 @@
 <link rel="stylesheet" href="{% static 'css/index.css' %}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <style>
+    .main-container {
+        display: grid;
+        grid-template-columns: 1fr 300px;
+        gap: 2rem;
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .page-container {
+        max-width: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .trending-sidebar {
+        position: sticky;
+        top: 2rem;
+        height: fit-content;
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .trending-header {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        margin-bottom: 1.5rem;
+        color: #333;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #f0f0f0;
+    }
+
+    .trending-header i {
+        color: #008C9E;
+        font-size: 1.2rem;
+    }
+
+    .trending-header h3 {
+        font-weight: 600;
+        color: #008C9E;
+    }
+
+    .trending-post {
+        display: flex;
+        gap: 1rem;
+        padding: 0.8rem 0;
+        border-bottom: 1px solid #eee;
+        transition: transform 0.2s ease;
+    }
+
+    .trending-post:hover {
+        transform: translateX(5px);
+    }
+
+    .trending-post:last-child {
+        border-bottom: none;
+    }
+
+    .trending-image {
+        width: 60px;
+        height: 60px;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .trending-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .trending-info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .trending-title {
+        font-weight: 600;
+        color: #333;
+        font-size: 0.9rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .trending-stats {
+        display: flex;
+        gap: 1rem;
+        font-size: 0.8rem;
+        color: #666;
+    }
+
+    .trending-stats span {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+
+    @media (max-width: 1024px) {
+        .main-container {
+            grid-template-columns: 1fr;
+        }
+
+        .trending-sidebar {
+            display: none;
+        }
+    }
+
     .page-container {
         max-width: 800px;
         margin: 2rem auto;
@@ -133,10 +247,208 @@
         visibility: visible;
         opacity: 1;
     }
+
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .action-btn {
+        background: none;
+        border: none;
+        color: #666;
+        cursor: pointer;
+        font-size: 1.5rem;
+        padding: 0.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .action-btn:hover {
+        transform: scale(1.1);
+    }
+
+    .action-btn .fa-heart {
+        color: #ff4b4b;
+    }
+
+    .action-btn .fa-heart.far {
+        color: #666;
+    }
+
+    .action-btn .fa-star {
+        color: #ffd700;
+    }
+
+    .action-btn .fa-star.far {
+        color: #666;
+    }
+
+    .navigation-buttons {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .comments-section {
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #eee;
+    }
+
+    .comments-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .comments-toggle {
+        background: none;
+        border: none;
+        color: #008C9E;
+        cursor: pointer;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .comments-toggle i {
+        transition: transform 0.3s ease;
+    }
+
+    .comments-toggle.active i {
+        transform: rotate(180deg);
+    }
+
+    .comments-content {
+        display: none;
+    }
+
+    .comments-content.visible {
+        display: block;
+        animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .comments-section h4 {
+        font-size: 1.1rem;
+        color: #333;
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+
+    .comment {
+        margin-bottom: 1rem;
+        padding: 0.8rem;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        border-left: 3px solid #008C9E;
+    }
+
+    .comment-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+        align-items: center;
+    }
+
+    .comment-user {
+        font-weight: 600;
+        color: #008C9E;
+    }
+
+    .comment-time {
+        font-size: 0.8rem;
+        color: #666;
+    }
+
+    .comment-content {
+        color: #444;
+        line-height: 1.4;
+    }
+
+    .comment-form {
+        margin-top: 1.5rem;
+        display: flex;
+        gap: 0.8rem;
+    }
+
+    .comment-input {
+        flex: 1;
+        padding: 0.8rem;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        transition: border-color 0.3s ease;
+    }
+
+    .comment-input:focus {
+        outline: none;
+        border-color: #008C9E;
+        box-shadow: 0 0 0 2px rgba(0, 140, 158, 0.1);
+    }
+
+    .comment-form button {
+        padding: 0.8rem 1.5rem;
+        white-space: nowrap;
+    }
+
+    .custom-button.following {
+        background-color: #666;
+    }
+
+    .tabs-container {
+        margin-bottom: 2rem;
+        border-bottom: 1px solid #eee;
+    }
+
+    .tabs-nav {
+        display: flex;
+        gap: 2rem;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 1rem;
+    }
+
+    .tab-item {
+        padding: 1rem 0;
+        color: #666;
+        text-decoration: none;
+        position: relative;
+        font-weight: 500;
+    }
+
+    .tab-item:hover {
+        color: #008C9E;
+    }
+
+    .tab-item.active {
+        color: #008C9E;
+    }
+
+    .tab-item.active::after {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background-color: #008C9E;
+    }
 </style>
 <script>
-function toggleFavorite(postId, button) {
-    fetch(`/post/${postId}/favorite/`, {
+function toggleAction(postId, button, action) {
+    fetch(`/post/${postId}/${action}/`, {
         method: 'POST',
         headers: {
             'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
@@ -145,7 +457,8 @@ function toggleFavorite(postId, button) {
     .then(response => response.json())
     .then(data => {
         const icon = button.querySelector('i');
-        if (data.is_favorited) {
+        const isActive = data[`is_${action}d`];
+        if (isActive) {
             icon.classList.remove('far');
             icon.classList.add('fas');
         } else {
@@ -154,73 +467,240 @@ function toggleFavorite(postId, button) {
         }
     });
 }
+
+function toggleLike(postId, button) {
+    toggleAction(postId, button, 'like');
+}
+
+function toggleFavorite(postId, button) {
+    toggleAction(postId, button, 'favorite');
+}
+
+function addComment(postId, button) {
+    const form = button.closest('form');
+    const input = form.querySelector('input[name="content"]');
+    const content = input.value.trim();
+    
+    if (!content) return;
+
+    fetch(`/post/${postId}/comment/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `content=${encodeURIComponent(content)}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            location.reload();
+        }
+    });
+}
+
+function toggleComments(button, postId) {
+    const section = button.closest('.comments-section');
+    const content = section.querySelector('.comments-content');
+    const isVisible = content.classList.toggle('visible');
+    button.classList.toggle('active');
+    
+    const text = button.querySelector('span');
+    const count = button.getAttribute('data-count');
+    text.textContent = isVisible ? 'Ocultar comentários' : `Ver ${count} comentários`;
+}
+
+function toggleFollow(username, button) {
+    fetch(`/users/follow/${username}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            if (data.is_following) {
+                button.textContent = 'Deixar de Seguir';
+                button.classList.add('following');
+            } else {
+                button.textContent = 'Seguir Artista';
+                button.classList.remove('following');
+            }
+        } else {
+            alert(data.message);
+        }
+    });
+}
 </script>
 {% endblock %}
 
 {% block main %}
-<div class="page-container">
-    {% for post in posts %}
-    <article class="post-item">
-        <header class="author-info">
-            <div class="author-details">
-                <div class="author-avatar">
-                    {% if post.author.avatar %}
-                        <img src="{{post.author.avatar.url}}" alt="Avatar">
-                    {% else %}
-                    {{ post.author.username.0 }}
-                    {% endif %}
-                </div>
-                <div class="author-text">
-                    <span class="author-username">@{{ post.author.username }}</span>
-                    {% if post.author.get_full_name %}
-                        <span class="author-fullname">{{ post.author.get_full_name }}</span>
-                    {% endif %}
-                </div>
-            </div>
-            <span class="post-date">{{ post.created_at|date:"d M Y" }}</span>
-        </header>
-    
-        <div class="post-main-image">
-            <img src="{{ post.image.url }}">
-        </div>
-        
-        <footer class="post-footer">
-            <div class="post-info">
-                <h3 class="post-title">
-                    {{post.title}}
-                </h3>
-                <p class="post-description">
-                    {{ post.description }}
-                </p>
-            </div>
-
-            <div class="post-buttons">
-                <div class="tooltip-container">
-                    {% csrf_token %}
-                    <button class="favorite-btn" onclick="toggleFavorite({{post.id}}, this)" title="Favoritar">
-                        <i class="{% if post.is_favorited %}fas{% else %}far{% endif %} fa-star"></i>
-                    </button>
-                    <span class="tooltip-text">Adicionar aos favoritos</span>
-                </div>
-                <a href="{% url 'post_detail' post.id %}" class="custom-button hollow">Ver Mais</a>
-                <button class="custom-button full">Seguir Artista</button>
-            </div>
-        </footer>
-    </article>
-    {% endfor %}
-
-    <div class="paginator">
-        {% if posts.has_previous %}
-            <a href="?p={{ posts.previous_page_number }}">
-                <button class="custom-button full">Anterior</button>
-            </a>
+<div class="tabs-container">
+    <nav class="tabs-nav">
+        <a href="?tab=all" class="tab-item {% if active_tab == 'all' or not active_tab %}active{% endif %}">
+            Para Você
+        </a>
+        {% if user.is_authenticated %}
+        <a href="?tab=following" class="tab-item {% if active_tab == 'following' %}active{% endif %}">
+            Artistas que Sigo
+        </a>
+        <a href="?tab=favorites" class="tab-item {% if active_tab == 'favorites' %}active{% endif %}">
+            Favoritos
+        </a>
         {% endif %}
-        {% if posts.has_next %}
-            <a href="?p={{ posts.next_page_number }}">
-                <button class="custom-button full">Próxima</button>
-            </a>
-        {% endif %}
-    </div>
+    </nav>
 </div>
 
+<div class="main-container">
+    <div class="page-container">
+        {% for post in posts %}
+        <article class="post-item">
+            <header class="author-info">
+                <div class="author-details">
+                    <a href="{% url 'user_detail' post.author.username %}">
+                        <div class="author-avatar">
+                            {% if post.author.avatar %}
+                                <img src="{{post.author.avatar.url}}" alt="Avatar">
+                            {% else %}
+                            {{ post.author.username.0 }}
+                            {% endif %}
+                        </div>
+                    </a>
+                    <div class="author-text">
+                        <a href="{% url 'user_detail' post.author.username %}">
+                            <span class="author-username">@{{ post.author.username }}</span>
+                            {% if post.author.get_full_name %}
+                                <span class="author-fullname">{{ post.author.get_full_name }}</span>
+                            {% endif %}
+                        </a>
+                    </div>
+                </div>
+                <span class="post-date">{{ post.created_at|date:"d M Y" }}</span>
+            </header>
+        
+            <div class="post-main-image">
+                <img src="{{ post.image.url }}">
+            </div>
+            
+            <footer class="post-footer">
+                <div class="post-info">
+                    <h3 class="post-title">
+                        {{post.title}}
+                    </h3>
+                    <p class="post-description">
+                        {{ post.description }}
+                    </p>
+                </div>
+
+                <div class="post-buttons">
+                    {% csrf_token %}
+                    <div class="action-buttons">
+                        <div class="tooltip-container">
+                            <button class="action-btn" onclick="toggleLike({{post.id}}, this)" title="Curtir">
+                                <i class="{% if post.is_liked %}fas{% else %}far{% endif %} fa-heart"></i>
+                            </button>
+                            <span class="tooltip-text">Curtir post</span>
+                        </div>
+                        <div class="tooltip-container">
+                            <button class="action-btn" onclick="toggleFavorite({{post.id}}, this)" title="Favoritar">
+                                <i class="{% if post.is_favorited %}fas{% else %}far{% endif %} fa-star"></i>
+                            </button>
+                            <span class="tooltip-text">Adicionar aos favoritos</span>
+                        </div>
+                    </div>
+                    <div class="navigation-buttons">
+                        <a href="{% url 'post_detail' post.id %}" class="custom-button hollow">Ver Mais</a>
+                        {% if user.is_authenticated and user != post.author %}
+                            <button 
+                                class="custom-button full {% if post.is_following %}following{% endif %}" 
+                                onclick="toggleFollow('{{post.author.username}}', this)">
+                                {% if post.is_following %}
+                                    Deixar de Seguir
+                                {% else %}
+                                    Seguir Artista
+                                {% endif %}
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="comments-section">
+                    <div class="comments-header">
+                        <h4>Comentários</h4>
+                        <button class="comments-toggle" 
+                                onclick="toggleComments(this, {{post.id}})" 
+                                data-count="{{ post.comments|length }}">
+                            <span>Ver {{ post.comments|length }} comentários</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="comments-content">
+                        {% for comment in post.comments %}
+                        <div class="comment">
+                            <div class="comment-header">
+                                <span class="comment-user">{{ comment.user.username }}</span>
+                                <span class="comment-time">{{ comment.created_at|timesince }}</span>
+                            </div>
+                            <div class="comment-content">
+                                {{ comment.content }}
+                            </div>
+                        </div>
+                        {% endfor %}
+                        
+                        {% if user.is_authenticated %}
+                        <form class="comment-form" onsubmit="event.preventDefault();">
+                            {% csrf_token %}
+                            <input type="text" name="content" class="comment-input" placeholder="Escreva um comentário...">
+                            <button type="button" class="custom-button full" onclick="addComment({{post.id}}, this)">Comentar</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </footer>
+        </article>
+        {% endfor %}
+
+        <div class="paginator">
+            {% if posts.has_previous %}
+                <a href="?p={{ posts.previous_page_number }}">
+                    <button class="custom-button full">Anterior</button>
+                </a>
+            {% endif %}
+            {% if posts.has_next %}
+                <a href="?p={{ posts.next_page_number }}">
+                    <button class="custom-button full">Próxima</button>
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <aside class="trending-sidebar">
+        <div class="trending-header">
+            <i class="fas fa-crown"></i>
+            <h3>Posts Populares</h3>
+        </div>
+        {% for post in trending_posts %}
+        <a href="{% url 'post_detail' post.id %}" class="trending-post">
+            <div class="trending-image">
+                <img src="{{ post.image.url }}" alt="{{ post.title }}">
+            </div>
+            <div class="trending-info">
+                <h4 class="trending-title">{{ post.title }}</h4>
+                <div class="trending-stats">
+                    <span>
+                        <i class="fas fa-heart"></i>
+                        {{ post.like_count }}
+                    </span>
+                    <span>
+                        <i class="fas fa-comment"></i>
+                        {{ post.comment_count }}
+                    </span>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </aside>
+</div>
 {% endblock %}
