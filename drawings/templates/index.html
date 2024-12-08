@@ -5,6 +5,156 @@
 
 {% block head %}
 <link rel="stylesheet" href="{% static 'css/index.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<style>
+    .page-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 1rem;
+    }
+
+    .post-item {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
+        padding: 1.5rem;
+    }
+
+    .author-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .author-details {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .author-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #008C9E;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 500;
+    }
+
+    .author-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+    .post-main-image img {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin: 1rem 0;
+    }
+
+    .post-footer {
+        margin-top: 1rem;
+    }
+
+    .paginator {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .favorite-btn {
+        background: none;
+        border: none;
+        color: #666;
+        cursor: pointer;
+        font-size: 1.5rem;
+        padding: 0.5rem;
+        transition: color 0.3s ease;
+    }
+
+    .favorite-btn:hover {
+        color: #ffd700;
+    }
+
+    .favorite-btn.active {
+        color: #ffd700;
+    }
+
+    .post-buttons {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .tooltip-container {
+        position: relative;
+        display: inline-block;
+    }
+
+    .tooltip-text {
+        visibility: hidden;
+        background-color: #333;
+        color: white;
+        text-align: center;
+        padding: 5px 10px;
+        border-radius: 6px;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.875rem;
+        white-space: nowrap;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .tooltip-text::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: #333 transparent transparent transparent;
+    }
+
+    .tooltip-container:hover .tooltip-text {
+        visibility: visible;
+        opacity: 1;
+    }
+</style>
+<script>
+function toggleFavorite(postId, button) {
+    fetch(`/post/${postId}/favorite/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        const icon = button.querySelector('i');
+        if (data.is_favorited) {
+            icon.classList.remove('far');
+            icon.classList.add('fas');
+        } else {
+            icon.classList.remove('fas');
+            icon.classList.add('far');
+        }
+    });
+}
+</script>
 {% endblock %}
 
 {% block main %}
@@ -12,30 +162,22 @@
     {% for post in posts %}
     <article class="post-item">
         <header class="author-info">
-            <div>
+            <div class="author-details">
                 <div class="author-avatar">
                     {% if post.author.avatar %}
-                    <img src="{{post.author.avatar.url}}">
+                        <img src="{{post.author.avatar.url}}" alt="Avatar">
                     {% else %}
                     {{ post.author.username.0 }}
                     {% endif %}
                 </div>
-        
-                <p>{{post.author.full_name}}</p>
+                <div class="author-text">
+                    <span class="author-username">@{{ post.author.username }}</span>
+                    {% if post.author.get_full_name %}
+                        <span class="author-fullname">{{ post.author.get_full_name }}</span>
+                    {% endif %}
+                </div>
             </div>
-
-            <div class="c-buttons">
-                <a href="{% url 'edit_post' post.id %}">
-                    <button class="custom-button full">
-                        <i class="fa-solid fa-pencil"></i>
-                    </button>
-                </a>
-                <a href="{% url 'delete_post' post.id %}">
-                    <button class="custom-button hollow">
-                        <i class="fa-solid fa-trash"></i>
-                    </button>
-                </a>
-            </div>
+            <span class="post-date">{{ post.created_at|date:"d M Y" }}</span>
         </header>
     
         <div class="post-main-image">
@@ -53,7 +195,14 @@
             </div>
 
             <div class="post-buttons">
-                <button class="custom-button hollow">Ver Mais</button>
+                <div class="tooltip-container">
+                    {% csrf_token %}
+                    <button class="favorite-btn" onclick="toggleFavorite({{post.id}}, this)" title="Favoritar">
+                        <i class="{% if post.is_favorited %}fas{% else %}far{% endif %} fa-star"></i>
+                    </button>
+                    <span class="tooltip-text">Adicionar aos favoritos</span>
+                </div>
+                <a href="{% url 'post_detail' post.id %}" class="custom-button hollow">Ver Mais</a>
                 <button class="custom-button full">Seguir Artista</button>
             </div>
         </footer>

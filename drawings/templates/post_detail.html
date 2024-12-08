@@ -1,14 +1,115 @@
-
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}{{ post.title }}{% endblock %}
 
-{% block content %}
-  <h1>{{ post.title }}</h1>
-  <p>{{ post.description }}</p>
-  <p>Autor: {{ post.author.username }}</p>
-  {% if post.image %}
-    <img src="{{ post.image.url }}" alt="{{ post.title }}">
-  {% endif %}
-  <p>Criado em: {{ post.created_at }}</p>
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
+<style>
+    .post-detail-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 1rem;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .post-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .post-image {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin: 1rem 0;
+    }
+
+    .post-description {
+        margin: 1rem 0;
+        color: #666;
+    }
+
+    .post-author, .post-date {
+        color: #888;
+        font-size: 0.9rem;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .post-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+        justify-content: flex-end;
+    }
+
+    .post-author-info {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .post-author-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #008C9E;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 500;
+    }
+</style>
+{% endblock %}
+
+{% block main %}
+<div class="post-detail-container">
+    <header class="flex justify-between items-start mb-6">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900 mb-4">{{ post.title }}</h1>
+            <div class="post-author-info">
+                <div class="post-author-avatar">
+                    {% if post.author.avatar %}
+                        <img src="{{post.author.avatar.url}}" class="w-full h-full object-cover rounded-full">
+                    {% else %}
+                        {{ post.author.username.0 }}
+                    {% endif %}
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-medium text-[#008C9E]">@{{ post.author.username }}</span>
+                    <time class="text-sm text-gray-500">{{ post.created_at|date:"d M Y" }}</time>
+                </div>
+            </div>
+        </div>
+
+        {% if user.is_authenticated and post.author == user %}
+        <div class="post-actions">
+            <a href="{% url 'edit_post' post.id %}" class="custom-button full">
+                <i class="fa-solid fa-pencil"></i>
+                Editar
+            </a>
+            <a href="{% url 'delete_post' post.id %}" class="custom-button hollow" onclick="return confirm('Tem certeza que deseja excluir este post?')">
+                <i class="fa-solid fa-trash"></i>
+                Excluir
+            </a>
+        </div>
+        {% endif %}
+    </header>
+    
+    {% if post.image %}
+        <img src="{{ post.image.url }}" alt="{{ post.title }}" class="post-image mb-6">
+    {% endif %}
+    
+    <p class="post-description text-gray-700">{{ post.description }}</p>
+</div>
 {% endblock %}
