@@ -55,15 +55,24 @@
                           {% endif %}
                         >
                     </div>
-                    <div class="image-input-container">
-                        {{ post_item.image }}
-                    </div>
                     <div class="form-actions">
-                        {{ post_item.image_legend }}
+                        {{ post_item.id }}
+
                         <div>
+                            <label class="image-legend-label">Legenda</label>
+                            {{ post_item.image_legend }}
+                        </div>
+
+                        <div class="form-action-buttons">
                             <label id="image-input-label" class="custom-button full">
                                 <i class="fa-solid fa-upload"></i>
+                                <div class="image-input-container">
+                                    {{ post_item.image }}
+                                </div>
                             </label>
+                            <!-- <button type="button" class="form-delete-button custom-button hollow">
+                                <i class="fa-solid fa-trash"></i>
+                            </button> -->
                         </div>
                     </div>
                 </article>

@@ -11,19 +11,22 @@ window.addEventListener('load', () => {
 
     let nextFormIndex = imageForms.length - 1
 
-    setUpNextImageInput()
+    updateAllForms()
+    setUpHoverSpace()
 
     function addForm() {
         let newForm = getLastImageForm().cloneNode(true)
-        const newFormImageInput = newForm.querySelector(`.image-preview`)
+        const imageInputLabel = newForm.querySelector(`#image-input-label`)
         nextFormIndex++
 
         newForm.innerHTML = newForm.innerHTML.replace(formRegex, `postitem_set-${nextFormIndex}-`)
         newForm.id = `post-image-card-${nextFormIndex}`
+
+        imageInputLabel.setAttribute('for', getNextImageInputId())
         
         imageContainer.append(newForm)
         
-        setUpNextImageInput()
+        setUpNextImageForm()
         totalFormsElement.setAttribute('value', `${nextFormIndex}`)
     }
 
@@ -38,12 +41,36 @@ window.addEventListener('load', () => {
 
         if (imgPreview) {
             const imageBlob = URL.createObjectURL(imgInput.files[0]) 
-            console.log(imageBlob)
             imgPreview.src = imageBlob
         }
 
         if (currentImageContainer.classList.contains('invisible'))
             currentImageContainer.classList.remove('invisible')
+    }
+
+    function handleRemoveForm(index) {
+        console.log("HERE")
+
+        const form = document.getElementById(getImageContainerId(index))
+        form.remove()
+
+        nextFormIndex--
+        totalFormsElement.setAttribute('value', `${nextFormIndex}`)
+
+        updateAllForms()
+    }
+
+    function updateAllForms() {
+        const formCards = document.getElementById('image-cards-container').querySelectorAll("article")
+        
+        formCards.forEach((card, index) => {
+            card.id = `post-image-card-${index}`
+            card.innerHTML = card.innerHTML.replace(formRegex, `postitem_set-${index}-`)
+            setUpImageForm(index)
+        })
+
+        nextFormIndex = formCards.length - 1
+        setUpHoverSpace()
     }
 
     function getLastImageForm() {
@@ -64,9 +91,21 @@ window.addEventListener('load', () => {
         return `post-image-card-${index}`
     }
 
-    function setUpNextImageInput() {
-        const currentIndex = nextFormIndex
+    function setUpImageForm(index) {
+        const deleteButton = document.getElementById(getImageContainerId(index)).querySelector('.form-delete-button')
+        const imageInput = document.getElementById(getImageInputId(index))
+
+        imageInput.addEventListener('change', e => handleImageChange(e, index))
+        deleteButton.addEventListener('click', () => handleRemoveForm(index))
+    }
+
+    function setUpNextImageForm() {
+        const index = nextFormIndex
+        setUpImageForm(index)
+        setUpHoverSpace()
+    }
+
+    function setUpHoverSpace() {
         hoverImageSpace.setAttribute('for', getNextImageInputId())
-        document.getElementById(getNextImageInputId()).addEventListener('change', e => handleImageChange(e, currentIndex))
     }
 })

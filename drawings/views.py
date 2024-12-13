@@ -7,7 +7,6 @@ from .forms import CreatePostForm
 from users.forms import SignUpForm
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .forms import PostForm
 from django.shortcuts import get_object_or_404
 from users.models import User
 from django.contrib.auth.forms import UserCreationForm
@@ -46,9 +45,8 @@ def create_post(request):
     if request.method == 'POST':
         post_form = CreatePostForm(request.POST)
         postitem_formset = PostItemFormSet(request.POST, request.FILES)
-        print(postitem_formset)
         
-        if post_form.is_valid():
+        if post_form.is_valid() and postitem_formset.is_valid():
             post = post_form.save(commit=False)
             post.author = request.user
             post.save()
@@ -76,35 +74,26 @@ def delete_post(request, post_id):
 
     return redirect('main-page')
 
-
-# TÁ DANDO ERRO
 def edit_post(request, post_id):
     post = Post.objects.get(id=post_id)
 
     if request.method == 'POST':
         post_form = CreatePostForm(request.POST, instance=post)
-        postitem_formset = PostItemFormSet(request.POST, request.FILES)
+        postitem_formset = PostItemFormSet(request.POST, request.FILES, instance=post)
         
-        if post_form.is_valid():
-            post = post_form.save(commit=False)
-            post.author = request.user
-            post.save()
-            
+        if post_form.is_valid() and postitem_formset.is_valid():
+            post_form.save()
             post_items = postitem_formset.save(commit=False)
-            for post_item in post_items:
-                post_item.post = post
+
+            for post_item in post_items:            
                 post_item.save()
                 
             return redirect('main-page')
     else:
         post_items = PostItem.objects.filter(post=post)
 
-        print(post_items)
-
         post_form = CreatePostForm(instance=post)
         postitem_formset = PostItemFormSet(instance=post)
-
-        print(postitem_formset)
     
     context = {
         'post_form': post_form,
