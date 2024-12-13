@@ -2,9 +2,10 @@ import json
 from django.forms import inlineformset_factory
 from django.shortcuts import render
 from .models import Post, PostItem
+from users.models import User
 from .forms import CreatePostForm
+from users.forms import SignUpForm
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
 from .forms import PostForm
 from django.shortcuts import get_object_or_404
 
@@ -18,17 +19,17 @@ def drawings_list(request):
 
     return render(request, 'index.html', context)
 
-
-from django.contrib.auth.forms import UserCreationForm
-
 def signup(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = SignUpForm(request.POST)
+
+        print(form.errors)
         if form.is_valid():
-            form.save()
+            user = User.objects.create_user(**form.cleaned_data)
+
             return redirect('login')  # Redireciona para a página de login após o cadastro
     else:
-        form = UserCreationForm()
+        form = SignUpForm()
     return render(request, 'signup.html', {'form': form})
 
 def post_detail(request, post_id):
