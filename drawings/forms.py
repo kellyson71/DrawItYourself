@@ -31,6 +31,6 @@ class PostItemForm(ModelForm):
         fields = ['image', 'image_legend']
         
         widgets = {
-            'image': FileInput(),
-            'image_legend': TextInput()
+            'image': FileInput(attrs={'class': 'image-input'}),
+            'image_legend': TextInput(attrs={ 'placeholder': 'Legenda' })
         }
