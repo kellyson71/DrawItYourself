@@ -19,6 +19,7 @@ logging.basicConfig(level=logging.DEBUG)
 LOGIN_REDIRECT_URL = 'main-page'
 LOGOUT_REDIRECT_URL = '/'  
 LOGIN_URL = '/login/' 
+AUTH_USER_MODEL = 'users.User'
 
 #LOAD .ENV
 from dotenv import load_dotenv
