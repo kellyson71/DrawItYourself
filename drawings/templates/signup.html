@@ -1,40 +1,92 @@
-{% extends 'base.html' %}
-{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    {% load static %}
+    {% load widget_tweaks %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Conta - DrawItYourself</title>
+    <script src="https://kit.fontawesome.com/5611eca8ce.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <a href="/" class="absolute top-4 right-4 text-gray-600 hover:text-gray-800">
+        <i class="fa-solid fa-xmark text-2xl"></i>
+    </a>
+    <div class="min-h-screen flex items-center justify-center py-12 px-4">
+        <div class="max-w-md w-full bg-white shadow-lg rounded-lg p-8">
+            <div class="text-center mb-8">
+                <img src="{% static 'imgs/draw-it-yourself-logo.png' %}" class="mx-auto h-20 mb-4">
+                <h2 class="text-3xl font-bold text-[#008C9E]">Crie sua conta</h2>
+                <p class="text-gray-500">Comece sua jornada artística</p>
+            </div>
 
-{% block title %}Registrar{% endblock %}
+            {% if messages %}
+            <div class="mb-6">
+                {% for message in messages %}
+                    <div class="p-4 rounded-lg {% if message.tags == 'success' %}bg-green-100 text-green-700{% else %}bg-red-100 text-red-700{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+            {% endif %}
 
-{% block head %}
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Nome de usuário</label>
+                    <div class="mt-1 relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fa-solid fa-user text-gray-400"></i>
+                        </div>
+                        {% render_field form.username class="pl-10 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-[#008C9E] focus:border-[#008C9E]" placeholder="Digite seu nome de usuário" %}
+                    </div>
+                </div>
 
-<link rel="stylesheet" href="{% static 'css/Registrar.css' %}">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">E-mail</label>
+                    <div class="mt-1 relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fa-solid fa-envelope text-gray-400"></i>
+                        </div>
+                        {% render_field form.email class="pl-10 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-[#008C9E] focus:border-[#008C9E]" placeholder="Digite seu e-mail" %}
+                    </div>
+                </div>
 
-{% endblock %}
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Senha</label>
+                    <div class="mt-1 relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fa-solid fa-lock text-gray-400"></i>
+                        </div>
+                        {% render_field form.password class="pl-10 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-[#008C9E] focus:border-[#008C9E]" placeholder="Digite sua senha" %}
+                    </div>
+                </div>
 
-{% block main %}
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Confirmar Senha</label>
+                    <div class="mt-1 relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fa-solid fa-lock text-gray-400"></i>
+                        </div>
+                        {% render_field form.confirm_password class="pl-10 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-[#008C9E] focus:border-[#008C9E]" placeholder="Confirme sua senha" %}
+                    </div>
+                </div>
 
+                <button type="submit" 
+                    class="w-full py-3 px-4 bg-[#008C9E] text-white font-medium rounded-lg hover:bg-[#007A89] transition-colors">
+                    Criar Conta
+                </button>
+            </form>
 
-<div class="flex justify-center items-center min-h-screen bg-gray-50">
-    <div class="bg-white p-10 rounded-lg shadow-lg w-full max-w-md">
-        <h2 class="text-3xl font-bold mb-6 text-center text-[#008C9E]">Registrar</h2>
-        <form method="post" class="space-y-6">
-            {% csrf_token %}
-            {{ form.as_p }}
-
-            <button 
-                type="submit" 
-                class="w-full py-2 px-4 bg-[#008C9E] text-white font-semibold rounded-md shadow-md hover:bg-[#007A89] focus:outline-none focus:ring-2 focus:ring-[#008C9E] focus:ring-opacity-50"
-            >
-                Registrar
-            </button>
-        </form>
-        <p class="mt-4 text-center text-gray-500">Já tem uma conta? 
-            <a href="{% url 'login' %}" class="text-[#008C9E] hover:text-[#007A89]">Faça login aqui</a>
-        </p>
+            <p class="mt-6 text-center text-gray-600">
+                Já tem uma conta? 
+                <a href="{% url 'login' %}" class="text-[#008C9E] hover:text-[#007A89] font-medium">
+                    Faça login
+                </a>
+            </p>
+        </div>
     </div>
-</div>
- 
- <script type="module">
-  import { setup } from 'https://cdn.skypack.dev/twind/shim';
-  setup({});
-</script>
-
-{% endblock %}
+</body>
+</html>

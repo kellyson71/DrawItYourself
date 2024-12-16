@@ -46,28 +46,42 @@
         <div id="image-cards-container">
             {{ postitem_formset.management_form }}
             {% for post_item in postitem_formset %}
-                <article id="post-image-card-{{forloop.counter0}}" class="image-form invisible">
-                    {{ post_item.image }}
-                    {{ post_item.image_legend }}
+                <article id="post-image-card-{{forloop.counter0}}" class="image-form {% if not post_item.image.value %} invisible {% endif %}">
+                    <div>
+                        <img 
+                          class="image-preview" 
+                          {% if post_item.image.value %} 
+                            src="{{ post_item.image.value.url }}" 
+                          {% endif %}
+                        >
+                    </div>
+                    <div class="form-actions">
+                        {{ post_item.id }}
+
+                        <div>
+                            <label class="image-legend-label">Legenda</label>
+                            {{ post_item.image_legend }}
+                        </div>
+
+                        <div class="form-action-buttons">
+                            <label id="image-input-label" class="custom-button full">
+                                <i class="fa-solid fa-upload"></i>
+                                <div class="image-input-container">
+                                    {{ post_item.image }}
+                                </div>
+                            </label>
+                            <!-- <button type="button" class="form-delete-button custom-button hollow">
+                                <i class="fa-solid fa-trash"></i>
+                            </button> -->
+                        </div>
+                    </div>
                 </article>
             {% endfor %}
         </div>
 
-<label for="image-input" id="hover-image-space" class="hover-image-space">
-    <p id="placeholder-text">Arraste e solte ou carregue as imagens</p>
-    <input type="file" name="image" id="image-input" accept="image/*" multiple hidden> <!-- O input está oculto -->
-</label>
-
-
-
-
-
-        {% comment %} <label class="image-field">
-            {{ post_form.image }}
-
-            Escolha uma imagem
-            <img id="image-preview">
-        </label> {% endcomment %}
+        <label id="hover-image-space" class="hover-image-space">
+            <p id="placeholder-text">Arraste e solte ou carregue as imagens</p>
+        </label>
 
         <button class="custom-button full" type="submit">Enviar</button>
     </form>

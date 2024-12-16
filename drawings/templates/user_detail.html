@@ -1,0 +1,549 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ profile_user.username }} - Perfil{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
+<style>
+    .profile-header {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 2rem;
+        align-items: center;
+    }
+
+    .profile-avatar {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        background: #008C9E;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        font-weight: 500;
+    }
+
+    .profile-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+    .profile-info {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .profile-name {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .profile-username {
+        color: #666;
+        font-size: 1.1rem;
+    }
+
+    .profile-stats {
+        display: flex;
+        gap: 2rem;
+        margin-top: 1rem;
+    }
+
+    .stat-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .stat-value {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #008C9E;
+    }
+
+    .stat-label {
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    .posts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+        padding: 1rem;
+    }
+
+    .post-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        transition: transform 0.2s ease;
+    }
+
+    .post-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .post-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .post-content {
+        padding: 1rem;
+    }
+
+    .post-title {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+
+    .post-stats {
+        display: flex;
+        gap: 1rem;
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    .post-stats i {
+        color: #008C9E;
+    }
+
+    /* Modal de Mensagem */
+    .message-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .message-modal.active {
+        display: flex;
+        animation: fadeIn 0.3s ease;
+    }
+
+    .message-container {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        width: 90%;
+        max-width: 500px;
+        position: relative;
+        transform: translateY(-20px);
+        opacity: 0;
+        animation: slideUp 0.3s ease forwards;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .message-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #eee;
+    }
+
+    .message-header h3 {
+        color: #008C9E;
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+
+    .close-modal {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: #666;
+        cursor: pointer;
+        transition: color 0.2s;
+    }
+
+    .close-modal:hover {
+        color: #ff4b4b;
+    }
+
+    .message-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .message-textarea {
+        width: 100%;
+        min-height: 150px;
+        padding: 1rem;
+        border: 2px solid #eee;
+        border-radius: 8px;
+        font-size: 1rem;
+        resize: vertical;
+        transition: border-color 0.2s;
+    }
+
+    .message-textarea:focus {
+        outline: none;
+        border-color: #008C9E;
+    }
+
+    .send-message-btn {
+        align-self: flex-end;
+        padding: 0.8rem 2rem;
+        background: #008C9E;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .send-message-btn:hover {
+        background: #006d7a;
+    }
+
+    /* Estilos para o feedback */
+    .message-feedback {
+        display: none;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        text-align: center;
+    }
+
+    .message-feedback.success {
+        display: block;
+        background-color: #e0f7e6;
+        color: #0a5d1c;
+        border: 1px solid #b7e4c7;
+    }
+
+    .message-feedback.error {
+        display: block;
+        background-color: #fde8e8;
+        color: #9b1c1c;
+        border: 1px solid #f8b4b4;
+    }
+
+    .message-feedback i {
+        margin-right: 0.5rem;
+    }
+
+    /* Animação de loading */
+    .sending {
+        opacity: 0.7;
+        pointer-events: none;
+        position: relative;
+    }
+
+    .sending::after {
+        content: '';
+        width: 1em;
+        height: 1em;
+        border: 2px solid #fff;
+        border-top-color: transparent;
+        border-radius: 50%;
+        display: inline-block;
+        animation: loading 0.8s linear infinite;
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    @keyframes loading {
+        to { transform: translateY(-50%) rotate(360deg); }
+    }
+
+    /* Estilos para upload de imagem */
+    .image-upload {
+        margin-top: 1rem;
+        border: 2px dashed #eee;
+        padding: 1rem;
+        border-radius: 8px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .image-upload:hover {
+        border-color: #008C9E;
+        background: #f8f9fa;
+    }
+
+    .image-upload input {
+        display: none;
+    }
+
+    .image-upload i {
+        font-size: 2rem;
+        color: #008C9E;
+        margin-bottom: 0.5rem;
+    }
+
+    .image-preview {
+        display: none;
+        margin-top: 1rem;
+    }
+
+    .image-preview.active {
+        display: block;
+    }
+
+    .preview-container {
+        position: relative;
+        width: 100%;
+        max-height: 200px;
+        overflow: hidden;
+        border-radius: 8px;
+    }
+
+    .preview-container img {
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+    }
+
+    .remove-image {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .remove-image:hover {
+        background: rgba(255, 0, 0, 0.5);
+    }
+</style>
+
+<script>
+    function openMessageModal() {
+        document.getElementById('messageModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeMessageModal() {
+        document.getElementById('messageModal').classList.remove('active');
+        document.body.style.overflow = 'auto';
+        // Limpa o feedback e o textarea ao fechar
+        document.querySelector('.message-feedback').style.display = 'none';
+        document.querySelector('.message-textarea').value = '';
+    }
+
+    let selectedImage = null;
+
+    function handleImageUpload(input) {
+        const file = input.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                selectedImage = file;
+                const preview = document.querySelector('.image-preview');
+                const img = preview.querySelector('img');
+                img.src = e.target.result;
+                preview.classList.add('active');
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function removeImage() {
+        selectedImage = null;
+        const preview = document.querySelector('.image-preview');
+        preview.classList.remove('active');
+        document.querySelector('#messageImage').value = '';
+    }
+
+    function sendMessage() {
+        const content = document.querySelector('.message-textarea').value;
+        const username = '{{ profile_user.username }}';
+        const feedback = document.querySelector('.message-feedback');
+        const sendButton = document.querySelector('.send-message-btn');
+
+        if (!content.trim() && !selectedImage) {
+            feedback.innerHTML = '<i class="fas fa-exclamation-circle"></i> Adicione uma mensagem ou imagem';
+            feedback.className = 'message-feedback error';
+            feedback.style.display = 'block';
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('content', content);
+        if (selectedImage) {
+            formData.append('image', selectedImage);
+        }
+
+        sendButton.classList.add('sending');
+        feedback.style.display = 'none';
+
+        fetch(`/users/message/${username}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            sendButton.classList.remove('sending');
+            
+            if (data.status === 'success') {
+                feedback.innerHTML = '<i class="fas fa-check-circle"></i> Mensagem enviada com sucesso!';
+                feedback.className = 'message-feedback success';
+                feedback.style.display = 'block';
+                
+                setTimeout(() => {
+                    closeMessageModal();
+                    document.querySelector('.message-textarea').value = '';
+                    removeImage();
+                }, 2000);
+            } else {
+                feedback.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${data.message || 'Erro ao enviar mensagem'}`;
+                feedback.className = 'message-feedback error';
+                feedback.style.display = 'block';
+            }
+        })
+        .catch(error => {
+            sendButton.classList.remove('sending');
+            feedback.innerHTML = '<i class="fas fa-exclamation-circle"></i> Erro ao enviar mensagem';
+            feedback.className = 'message-feedback error';
+            feedback.style.display = 'block';
+        });
+    }
+</script>
+{% endblock %}
+
+{% block main %}
+<div class="page-container">
+    <div class="profile-header">
+        <div class="profile-avatar">
+            {% if profile_user.avatar %}
+                <img src="{{ profile_user.avatar.url }}" alt="Avatar">
+            {% else %}
+                {{ profile_user.username.0 }}
+            {% endif %}
+        </div>
+        <div class="profile-info">
+            <h1 class="profile-name">{{ profile_user.get_full_name|default:profile_user.username }}</h1>
+            <span class="profile-username">@{{ profile_user.username }}</span>
+            <div class="profile-stats">
+                <div class="stat-item">
+                    <span class="stat-value">{{ posts_count }}</span>
+                    <span class="stat-label">Posts</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">{{ likes_count }}</span>
+                    <span class="stat-label">Curtidas</span>
+                </div>
+            </div>
+            {% if user.is_authenticated and user != profile_user %}
+            <button onclick="openMessageModal()" class="custom-button full">
+                <i class="fas fa-envelope"></i> Enviar Mensagem
+            </button>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="posts-grid">
+        {% for post in posts %}
+        <article class="post-card">
+            <a href="{% url 'post_detail' post.id %}">
+                <img src="{{ post.get_drawing_pages.0.image.url }}" alt="{{ post.title }}" class="post-image">
+                <div class="post-content">
+                    <h3 class="post-title">{{ post.title }}</h3>
+                    <div class="post-stats">
+                        <span><i class="fas fa-heart"></i> {{ post.like_count }}</span>
+                        <span><i class="fas fa-comment"></i> {{ post.comment_count }}</span>
+                    </div>
+                </div>
+            </a>
+        </article>
+        {% empty %}
+        <p>Nenhum post encontrado.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Modal de Mensagem -->
+<div id="messageModal" class="message-modal">
+    <div class="message-container">
+        <div class="message-header">
+            <h3>Enviar mensagem para @{{ profile_user.username }}</h3>
+            <button class="close-modal" onclick="closeMessageModal()">×</button>
+        </div>
+        <form class="message-form" onsubmit="event.preventDefault();">
+            {% csrf_token %}
+            <div class="message-feedback"></div>
+            <textarea 
+                class="message-textarea" 
+                placeholder="Digite sua mensagem aqui..."
+                maxlength="1000"
+            ></textarea>
+            
+            <label class="image-upload">
+                <input type="file" 
+                       id="messageImage" 
+                       accept="image/*" 
+                       onchange="handleImageUpload(this)">
+                <i class="fas fa-image"></i>
+                <p>Clique ou arraste uma imagem aqui</p>
+            </label>
+            
+            <div class="image-preview">
+                <div class="preview-container">
+                    <img src="" alt="Preview">
+                    <button type="button" class="remove-image" onclick="removeImage()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <button type="button" class="send-message-btn" onclick="sendMessage()">
+                <i class="fas fa-paper-plane"></i> Enviar
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

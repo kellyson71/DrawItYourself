@@ -104,6 +104,23 @@
     background: var(--gray-2);
 }
 
+.user-avatar.authenticated {
+    background-color: var(--purple-1);
+    color: white;
+    font-size: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logout-button {
+    background: none;
+    border: none;
+
+    color: rgb(239 68 68 / var(--tw-text-opacity, 1));
+}
+
 .page-content {
     display: flex;
 }
