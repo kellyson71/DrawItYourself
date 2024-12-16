@@ -1,0 +1,113 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Artistas que você segue{% endblock %}
+
+{% block main %}
+<div class="artists-container">
+    <h1>Artistas que você segue</h1>
+    
+    {% if artists %}
+        <div class="artists-grid">
+            {% for artist in artists %}
+            <div class="artist-card">
+                <div class="artist-header">
+                    <div class="artist-avatar">
+                        {% if artist.avatar %}
+                            <img src="{{ artist.avatar.url }}" alt="{{ artist.username }}">
+                        {% else %}
+                            {{ artist.username.0 }}
+                        {% endif %}
+                    </div>
+                    <div class="artist-info">
+                        <h3>@{{ artist.username }}</h3>
+                        {% if artist.get_full_name %}
+                            <p>{{ artist.get_full_name }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="artist-stats">
+                    <span>{{ artist.posts_count }} posts</span>
+                    <span>{{ artist.followers_count }} seguidores</span>
+                </div>
+                <div class="artist-actions">
+                    <a href="{% url 'user_detail' artist.username %}" class="custom-button hollow">Ver Perfil</a>
+                    <button 
+                        class="custom-button full following" 
+                        onclick="toggleFollow('{{ artist.username }}', this)">
+                        Deixar de Seguir
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="no-artists">Você ainda não segue nenhum artista.</p>
+    {% endif %}
+</div>
+
+<style>
+.artists-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.artists-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.artist-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.artist-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.artist-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #008C9E;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.artist-info h3 {
+    color: #333;
+    margin-bottom: 0.25rem;
+}
+
+.artist-stats {
+    display: flex;
+    gap: 1rem;
+    margin: 1rem 0;
+    color: #666;
+}
+
+.artist-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.no-artists {
+    text-align: center;
+    color: #666;
+    margin-top: 3rem;
+}
+</style>
+{% endblock %}

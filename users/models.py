@@ -31,10 +31,11 @@ class User(AbstractUser):
         return self.username
 
 class Message(models.Model):
-    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sender')
-    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='receiver')
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_messages')
     content = models.TextField()
     created_at = models.DateTimeField()
+    is_read = models.BooleanField(default=False) 
 
     def __str__(self):
         return f"{self.sender} -> {self.receiver}: {self.content}"
@@ -45,3 +46,14 @@ class MessageImage(models.Model):
     
     def __str__(self):
         return f"{self.message.sender}: {self.message.content}"
+
+class UserFollow(models.Model):
+    follower = models.ForeignKey(User, related_name='following', on_delete=models.CASCADE)
+    following = models.ForeignKey(User, related_name='followers', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('follower', 'following')
+
+    def __str__(self):
+        return f"{self.follower.username} -> {self.following.username}"

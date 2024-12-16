@@ -40,7 +40,14 @@
                 <div class="user-avatar">
                     <img>
                 </div>
-                <!-- <p>Olá, {{ request.user.username }}</p>  -->
+                <a href="{% url 'profile' %}" class="hover:text-[#008C9E]">
+                    <p>Olá, {{ request.user.username }}</p>
+                </a>
+                <a href="{% url 'logout' %}" class="ml-4">
+                    <button class="text-red-500 hover:text-red-700">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                    </button>
+                </a>
             </div>
         </div>
     </header>
@@ -52,12 +59,18 @@
                     <a href="/">
                         <li class="navbar-item"><i class="fa-solid fa-home"></i> <p>Home</p></li>
                     </a>
-                    <a href="/favorites">
+                    <a href="{% url 'favorites' %}">
                         <li class="navbar-item"><i class="fa-solid fa-star"></i> <p>Favorites</p></li>
+                    </a>
+                    <a href="{% url 'likes' %}">
+                        <li class="navbar-item"><i class="fa-solid fa-heart"></i> <p>Curtidos</p></li>
+                    </a>
+                    <a href="{% url 'users:following_artists' %}">
+                        <li class="navbar-item"><i class="fa-solid fa-users"></i> <p>Artistas seguindo</p></li>
                     </a>
                 </ul>
 
-                <a href="/">
+                <a href="{% url 'users:inbox' %}">
                     <li class="navbar-item"><i class="fa-solid fa-inbox"></i> <p>Caixa de Entrada</p></li>
                 </a>
             </nav>

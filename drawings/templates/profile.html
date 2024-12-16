@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Perfil - {{ user.username }}{% endblock %}
+
+{% block head %}
+<script src="https://cdn.tailwindcss.com"></script>
+{% endblock %}
+
+{% block main %}
+<div class="container mx-auto px-4">
+    <!-- Card do perfil -->
+    <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+        <div class="flex items-center gap-6">
+            <div class="w-24 h-24 bg-[#008C9E] bg-opacity-10 rounded-full flex items-center justify-center">
+                <i class="fa-solid fa-user text-4xl text-[#008C9E]"></i>
+            </div>
+            <div>
+                <h1 class="text-2xl font-bold text-[#008C9E]">{{ user.username }}</h1>
+                <p class="text-gray-500">Membro desde {{ user.date_joined|date:"F Y" }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grid de posts -->
+    <div class="bg-white rounded-xl shadow-lg p-6">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-bold text-[#008C9E]">Meus Posts</h2>
+            <a href="{% url 'create-post-page' %}" class="bg-[#008C9E] text-white px-4 py-2 rounded-lg hover:bg-[#007A89] transition-colors duration-200">
+                <i class="fa-solid fa-plus mr-2"></i>Novo Post
+            </a>
+        </div>
+
+        {% if posts %}
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for post in posts %}
+                <article class="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow duration-200">
+                    {% if post.image %}
+                        <a href="{% url 'post_detail' post.id %}" class="block">
+                            <div class="aspect-w-16 aspect-h-9">
+                                <img src="{{ post.image.url }}" alt="{{ post.title }}" class="w-full h-48 object-cover hover:opacity-90 transition-opacity">
+                            </div>
+                        </a>
+                    {% endif %}
+                    
+                    <div class="p-4">
+                        <a href="{% url 'post_detail' post.id %}" class="block hover:opacity-80">
+                            <h3 class="font-bold text-lg text-[#008C9E] mb-2">{{ post.title }}</h3>
+                            <p class="text-gray-600 text-sm mb-4">{{ post.description|truncatechars:100 }}</p>
+                        </a>
+                        
+                        <div class="flex items-center justify-between text-sm">
+                            <div class="flex items-center gap-2">
+                                <span class="text-gray-500">{{ post.created_at|date:"d/m/Y" }}</span>
+                                <a href="{% url 'post_detail' post.id %}" 
+                                   class="text-[#008C9E] hover:text-[#007A89] font-medium text-sm">
+                                    Ver mais
+                                </a>
+                            </div>
+                            <div class="flex gap-3">
+                                <a href="{% url 'edit_post' post.id %}" class="text-[#008C9E] hover:text-[#007A89]" title="Editar">
+                                    <i class="fa-solid fa-edit"></i>
+                                </a>
+                                <button onclick="if(confirm('Tem certeza que deseja excluir este post?')) window.location.href='{% url 'delete_post' post.id %}'" 
+                                        class="text-red-500 hover:text-red-700" title="Excluir">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center py-12">
+                <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fa-solid fa-image text-2xl text-gray-400"></i>
+                </div>
+                <p class="text-gray-500 mb-4">Você ainda não tem nenhum post</p>
+                <a href="{% url 'create-post-page' %}" class="inline-block bg-[#008C9E] text-white px-6 py-2 rounded-lg hover:bg-[#007A89] transition-colors duration-200">
+                    Criar primeiro post
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

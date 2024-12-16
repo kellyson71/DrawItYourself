@@ -1,0 +1,338 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Meus Curtidos{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<style>
+    .page-container {
+        width: 100%;
+        padding: 1rem;
+        margin: 0;
+    }
+
+    .likes-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        padding: 1rem;
+    }
+
+    .post-item {
+        width: 100%;
+        display: flex;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        overflow: hidden;
+        margin: 0;
+    }
+
+    .post-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+
+    .post-main-image {
+        width: 200px;
+        min-width: 200px;
+        height: 200px;
+    }
+
+    .post-main-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .post-item:hover .post-main-image img {
+        transform: scale(1.05);
+    }
+
+    .post-content {
+        flex: 1;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .author-info {
+        padding: 0 0 1rem 0;
+        background: none;
+        border-bottom: 1px solid #eee;
+    }
+
+    .post-footer {
+        margin-top: auto;
+        padding: 1rem 0 0 0;
+    }
+
+    .post-title {
+        font-size: 1.25rem;
+        color: #008C9E;
+        margin-bottom: 0.5rem;
+    }
+
+    .post-description {
+        color: #666;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+        line-height: 1.4;
+    }
+
+    .post-buttons {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .like-btn {
+        background: #ff4b4b;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        border: none;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: background 0.3s ease;
+    }
+
+    .like-btn:hover {
+        background: #ff3333;
+    }
+
+    .favorite-btn {
+        background: #008C9E;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        border: none;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .favorite-btn i {
+        font-size: 1.1rem;
+    }
+
+    .favorite-btn:hover {
+        background: #006d7a;
+    }
+
+    .no-favorites {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .no-favorites i {
+        font-size: 4rem;
+        color: #008C9E;
+        margin-bottom: 1.5rem;
+    }
+
+    .no-favorites p {
+        font-size: 1.4rem;
+        color: #444;
+        margin-bottom: 2rem;
+    }
+
+    .paginator {
+        margin-top: 3rem;
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+    }
+
+    .paginator button {
+        min-width: 120px;
+    }
+
+    .favorites-header {
+        text-align: center;
+        padding: 2rem 1rem;
+        margin-bottom: 2rem;
+        background: linear-gradient(135deg, #008C9E20 0%, #008C9E10 100%);
+        border-radius: 15px;
+    }
+
+    .favorites-title {
+        font-size: 2.2rem;
+        color: #008C9E;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    .favorites-title i {
+        font-size: 1.8rem;
+        color: #ffd700;
+    }
+
+    .favorites-subtitle {
+        color: #666;
+        font-size: 1rem;
+        font-weight: 300;
+    }
+
+    .likes-header {
+        text-align: center;
+        padding: 2rem 1rem;
+        margin-bottom: 2rem;
+        background: linear-gradient(135deg, #ff4b4b20 0%, #ff4b4b10 100%);
+        border-radius: 15px;
+    }
+
+    .likes-title {
+        font-size: 2.2rem;
+        color: #ff4b4b;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    .likes-title i {
+        font-size: 1.8rem;
+        color: #ff4b4b;
+    }
+
+    .likes-subtitle {
+        color: #666;
+        font-size: 1rem;
+        font-weight: 300;
+    }
+
+    .no-likes {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .no-likes i {
+        font-size: 4rem;
+        color: #ff4b4b;
+        margin-bottom: 1.5rem;
+    }
+</style>
+
+<script>
+function toggleLike(postId, button) {
+    fetch(`/post/${postId}/like/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (!data.is_liked) {
+            button.closest('.post-item').remove();
+            
+            if (document.querySelectorAll('.post-item').length === 0) {
+                document.querySelector('.likes-grid')?.remove();
+                document.querySelector('.paginator')?.remove();
+                
+                const noLikes = `
+                    <div class="no-likes">
+                        <i class="far fa-heart"></i>
+                        <p>Você ainda não curtiu nenhum post</p>
+                        <a href="{% url 'main-page' %}" class="custom-button full">Explorar Posts</a>
+                    </div>
+                `;
+                document.querySelector('.page-container').insertAdjacentHTML('beforeend', noLikes);
+            }
+        }
+    });
+}
+</script>
+{% endblock %}
+
+{% block main %}
+<div class="page-container">
+    <div class="likes-header">
+        <h1 class="likes-title">
+            <i class="fas fa-heart"></i>
+            Posts Curtidos
+        </h1>
+        <p class="likes-subtitle">Sua coleção de obras de arte favoritas</p>
+    </div>
+
+    {% if posts %}
+        <div class="likes-list">
+            {% for post in posts %}
+            <article class="post-item">
+                <div class="post-main-image">
+                    <img src="{{ post.image.url }}" alt="{{ post.title }}">
+                </div>
+                
+                <div class="post-content">
+                    <div class="author-info">
+                        <div class="author-details">
+                            <div class="author-avatar">
+                                {% if post.author.avatar %}
+                                    <img src="{{post.author.avatar.url}}" alt="Avatar">
+                                {% else %}
+                                    {{ post.author.username.0 }}
+                                {% endif %}
+                            </div>
+                            <div class="author-text">
+                                <span class="author-username">@{{ post.author.username }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="post-info">
+                        <h3 class="post-title">{{post.title}}</h3>
+                        <p class="post-description">{{ post.description|truncatechars:200 }}</p>
+                    </div>
+                    
+                    <div class="post-buttons">
+                        {% csrf_token %}
+                        <button class="like-btn" onclick="toggleLike({{post.id}}, this)">
+                            <i class="fas fa-heart"></i>
+                            <span>Descurtir</span>
+                        </button>
+                        <a href="{% url 'post_detail' post.id %}" class="custom-button hollow">Ver Mais</a>
+                    </div>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+        
+        <div class="paginator">
+            {% if posts.has_previous %}
+                <a href="?p={{ posts.previous_page_number }}">
+                    <button class="custom-button full">Anterior</button>
+                </a>
+            {% endif %}
+            {% if posts.has_next %}
+                <a href="?p={{ posts.next_page_number }}">
+                    <button class="custom-button full">Próxima</button>
+                </a>
+            {% endif %}
+        </div>
+    {% else %}
+        <div class="no-likes">
+            <i class="far fa-heart"></i>
+            <p>Você ainda não curtiu nenhum post</p>
+            <a href="{% url 'main-page' %}" class="custom-button full">Explorar Posts</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -16,6 +16,7 @@ import logging
 
 logging.basicConfig(level=logging.DEBUG)
 
+LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'main-page'
 LOGOUT_REDIRECT_URL = '/'  
 LOGIN_URL = '/login/' 
@@ -52,7 +53,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'users',
-    'drawings'
+    'drawings',
+    'widget_tweaks'
 ]
 # LOGIN_REDIRECT_URL = "chat-page"
 # LOGOUT_REDIRECT_URL = "login-user"
@@ -107,20 +109,8 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
+# Remova ou comente toda a configuração de AUTH_PASSWORD_VALIDATORS
+AUTH_PASSWORD_VALIDATORS = []  # deixe vazia para remover todas as validações
 
 
 # Internationalization
