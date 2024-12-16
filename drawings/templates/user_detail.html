@@ -490,7 +490,7 @@
         {% for post in posts %}
         <article class="post-card">
             <a href="{% url 'post_detail' post.id %}">
-                <img src="{{ post.image.url }}" alt="{{ post.title }}" class="post-image">
+                <img src="{{ post.get_drawing_pages.0.image.url }}" alt="{{ post.title }}" class="post-image">
                 <div class="post-content">
                     <h3 class="post-title">{{ post.title }}</h3>
                     <div class="post-stats">

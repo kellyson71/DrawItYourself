@@ -92,11 +92,9 @@ window.addEventListener('load', () => {
     }
 
     function setUpImageForm(index) {
-        const deleteButton = document.getElementById(getImageContainerId(index)).querySelector('.form-delete-button')
         const imageInput = document.getElementById(getImageInputId(index))
 
         imageInput.addEventListener('change', e => handleImageChange(e, index))
-        deleteButton.addEventListener('click', () => handleRemoveForm(index))
     }
 
     function setUpNextImageForm() {

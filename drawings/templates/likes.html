@@ -278,7 +278,7 @@ function toggleLike(postId, button) {
             {% for post in posts %}
             <article class="post-item">
                 <div class="post-main-image">
-                    <img src="{{ post.image.url }}" alt="{{ post.title }}">
+                    <img src="{{ post.get_drawing_pages.0.image.url }}" alt="{{ post.title }}">
                 </div>
                 
                 <div class="post-content">

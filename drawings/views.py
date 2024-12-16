@@ -1,8 +1,6 @@
 import json
 from django.forms import inlineformset_factory
 from django.shortcuts import render
-from .models import Post, PostItem
-from users.models import User
 from .models import Post, PostItem, Favorite, Like, Comment
 from .forms import CreatePostForm
 from users.forms import SignUpForm
@@ -16,7 +14,6 @@ from django.contrib.auth import logout
 from django.http import JsonResponse
 from django.utils import timezone
 from django.db.models import Count, Q
-from django.contrib.auth.models import User
 from users.models import UserFollow  # Adicionar esta importação
 
 PostItemFormSet = inlineformset_factory(Post, PostItem, fields=('image', 'image_legend'), extra=1)

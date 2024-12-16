@@ -139,9 +139,11 @@
             {% for message in messages %}
                 <div class="message-bubble {% if message.sender == request.user %}sent{% endif %}">
                     {{ message.content }}
-                    {% if message.has_image %}
-                        <img src="{{ message.messageimage_set.first.image.url }}" style="max-width: 200px; margin-top: 0.5rem;">
-                    {% endif %}
+                    <div>
+                        {% if message.has_image %}
+                            <img src="{{ message.messageimage_set.first.image.url }}" style="max-width: 200px; margin-top: 0.5rem;">
+                        {% endif %}
+                    </div>
                 </div>
             {% endfor %}
         </div>

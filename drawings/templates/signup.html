@@ -45,18 +45,6 @@
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Gmail</label>
-                    <div class="mt-1 relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <i class="fa-brands fa-google text-gray-400"></i>
-                        </div>
-                        <input type="email" name="gmail" required 
-                            class="pl-10 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-[#008C9E] focus:border-[#008C9E]" 
-                            placeholder="seuemail@gmail.com">
-                    </div>
-                </div>
-
-                <div>
                     <label class="block text-sm font-medium text-gray-700">E-mail</label>
                     <div class="mt-1 relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -72,7 +60,7 @@
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <i class="fa-solid fa-lock text-gray-400"></i>
                         </div>
-                        {% render_field form.password1 class="pl-10 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-[#008C9E] focus:border-[#008C9E]" placeholder="Digite sua senha" %}
+                        {% render_field form.password class="pl-10 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-[#008C9E] focus:border-[#008C9E]" placeholder="Digite sua senha" %}
                     </div>
                 </div>
 
@@ -82,7 +70,7 @@
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <i class="fa-solid fa-lock text-gray-400"></i>
                         </div>
-                        {% render_field form.password2 class="pl-10 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-[#008C9E] focus:border-[#008C9E]" placeholder="Confirme sua senha" %}
+                        {% render_field form.confirm_password class="pl-10 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-[#008C9E] focus:border-[#008C9E]" placeholder="Confirme sua senha" %}
                     </div>
                 </div>
 

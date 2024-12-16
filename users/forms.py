@@ -8,6 +8,10 @@ class SignUpForm(ModelForm):
         model = User
         fields = ['username', 'email', 'password']
 
+        widgets = {
+            'password': PasswordInput()
+        }
+
     def clean(self):
         cleaned_data = super(SignUpForm, self).clean()
 

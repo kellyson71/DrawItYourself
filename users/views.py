@@ -1,8 +1,7 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from .models import Message, MessageImage, UserFollow
+from .models import Message, MessageImage, User, UserFollow
 from django.utils import timezone
 from django.db.models import Q
 from drawings.models import Post  # Adicionar esta importação
@@ -31,7 +30,7 @@ def send_message(request, username):
                         image=image
                     )
                     
-                return JsonResponse({'status': 'success'})
+                return redirect('users:chat_detail', username=username)
                 
         except User.DoesNotExist:
             return JsonResponse({'status': 'error', 'message': 'Usuário não encontrado'}, status=404)
