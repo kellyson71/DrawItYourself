@@ -38,8 +38,7 @@ def drawings_list(request):
     
     # Buscar posts populares separadamente - modificado para sempre trazer os dados
     trending_posts = Post.objects.annotate(
-        like_count=Count('like'),
-        comment_count=Count('comment')
+        like_count=Count('like')
     ).order_by('-like_count', '-created_at')[:5]
     
     paginator = Paginator(all_posts, POSTS_PER_PAGE)
@@ -64,6 +63,8 @@ def drawings_list(request):
 
     # Mesmo tratamento para trending_posts
     for post in trending_posts:
+        post.like_count = Like.objects.filter(post=post).count()
+        post.comment_count = Comment.objects.filter(post=post).count()
         if request.user.is_authenticated:
             post.is_favorited = Favorite.objects.filter(user=request.user, post=post).exists()
             post.is_liked = Like.objects.filter(user=request.user, post=post).exists()
