@@ -65,13 +65,6 @@ def drawings_list(request):
     for post in trending_posts:
         post.like_count = Like.objects.filter(post=post).count()
         post.comment_count = Comment.objects.filter(post=post).count()
-        if request.user.is_authenticated:
-            post.is_favorited = Favorite.objects.filter(user=request.user, post=post).exists()
-            post.is_liked = Like.objects.filter(user=request.user, post=post).exists()
-        else:
-            post.is_favorited = False
-            post.is_liked = False
-        post.comments = Comment.objects.filter(post=post).select_related('user').order_by('-created_at')[:3]
 
     # Adicionar informação de following para cada post
     for post in posts:
