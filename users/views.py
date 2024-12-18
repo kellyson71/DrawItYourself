@@ -1,43 +1,65 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
+import logging
 from .models import Message, MessageImage, User, UserFollow
 from django.utils import timezone
 from django.db.models import Q
 from drawings.models import Post  # Adicionar esta importação
 
+logger = logging.getLogger(__name__)
+
 @login_required
 def send_message(request, username):
     if request.method == 'POST':
-        content = request.POST.get('content')
+        content = request.POST.get('content', '').strip()
         image = request.FILES.get('image')
         
+        if not content and not image:
+            return JsonResponse({
+                'status': 'error',
+                'message': 'É necessário fornecer uma mensagem ou imagem'
+            }, status=400)
+        
         try:
-            sender = User.objects.get(id=request.user.id)
+            sender = request.user
             receiver = User.objects.get(username=username)
             
-            if content or image:
-                message = Message.objects.create(
-                    sender=sender,
-                    receiver=receiver,
-                    content=content,
-                    created_at=timezone.now()
+            message = Message.objects.create(
+                sender=sender,
+                receiver=receiver,
+                content=content,
+                created_at=timezone.now()
+            )
+            
+            if image:
+                MessageImage.objects.create(
+                    message=message,
+                    image=image
                 )
                 
-                if image:
-                    MessageImage.objects.create(
-                        message=message,
-                        image=image
-                    )
-                    
-                return redirect('users:chat_detail', username=username)
+            return JsonResponse({
+                'status': 'success',
+                'message': 'Mensagem enviada com sucesso'
+            })
                 
         except User.DoesNotExist:
-            return JsonResponse({'status': 'error', 'message': 'Usuário não encontrado'}, status=404)
+            logger.error(f"Usuário não encontrado: {username}")
+            return JsonResponse({
+                'status': 'error',
+                'message': 'Usuário não encontrado'
+            }, status=404)
         except Exception as e:
-            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+            logger.error(f"Erro ao enviar mensagem: {str(e)}")
+            return JsonResponse({
+                'status': 'error',
+                'message': 'Erro ao enviar mensagem. Por favor, tente novamente.'
+            }, status=500)
             
-    return JsonResponse({'status': 'error'}, status=400)
+    return JsonResponse({
+        'status': 'error',
+        'message': 'Método não permitido'
+    }, status=405)
 
 @login_required
 def inbox(request):
