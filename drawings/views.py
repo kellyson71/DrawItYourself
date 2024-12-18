@@ -21,17 +21,32 @@ POSTS_PER_PAGE = 3
 
 def drawings_list(request):
     tab = request.GET.get('tab', 'all')
+    search_query = request.GET.get('search', '')
     
-    if tab == 'following' and request.user.is_authenticated:
-        following = UserFollow.objects.filter(follower=request.user).values_list('following', flat=True)
-        all_posts = Post.objects.filter(author__in=following)
-    elif tab == 'favorites' and request.user.is_authenticated:
-        favorites = Favorite.objects.filter(user=request.user).values_list('post', flat=True)
-        all_posts = Post.objects.filter(id__in=favorites)
-    else:
-        all_posts = Post.objects.all()
-        
-    all_posts = all_posts.annotate(
+    # Base query
+    posts = Post.objects.select_related('author').prefetch_related('comment_set')
+    
+    # Aplicar busca se houver query
+    if search_query:
+        posts = posts.filter(
+            Q(title__icontains=search_query) |
+            Q(description__icontains=search_query) |
+            Q(author__username__icontains=search_query)
+        )
+    
+    # Aplicar filtros de tab
+    if request.user.is_authenticated:
+        if tab == 'following':
+            following = UserFollow.objects.filter(follower=request.user).values_list('following', flat=True)
+            posts = posts.filter(author__in=following)
+        elif tab == 'favorites':
+            favorites = Favorite.objects.filter(user=request.user).values_list('post', flat=True)
+            posts = posts.filter(id__in=favorites)
+    
+    # Ordenar por data
+    posts = posts.order_by('-created_at')
+    
+    all_posts = posts.annotate(
         like_count=Count('like'),
         comment_count=Count('comment')
     ).order_by('-created_at')
@@ -106,8 +121,26 @@ def signup(request):
 
 def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
-    return render(request, 'post_detail.html', {'post': post})
+    if request.user.is_authenticated:
+        post._current_user = request.user
+        post.is_liked = Like.objects.filter(post=post, user=request.user).exists()
+        post.is_favorited = Favorite.objects.filter(post=post, user=request.user).exists()
+        post.is_following = UserFollow.objects.filter(
+            follower=request.user,
+            following=post.author
+        ).exists()
+    else:
+        post.is_liked = False
+        post.is_favorited = False
+        post.is_following = False
     
+    # Buscar todos os comentários para este post
+    post.comments = Comment.objects.filter(post=post).select_related('user').order_by('-created_at')
+    post.like_count = Like.objects.filter(post=post).count()
+    post.comment_count = post.comments.count()
+    
+    return render(request, 'post_detail.html', {'post': post})
+
 @login_required(login_url='login')
 def create_post(request):
     if request.method == 'POST':
@@ -282,6 +315,14 @@ def user_detail(request, username):
     user = get_object_or_404(User, username=username)
     user_posts = Post.objects.filter(author=user).order_by('-created_at')
     
+    # Adicionar verificação de following
+    is_following = False
+    if request.user.is_authenticated and request.user != user:
+        is_following = UserFollow.objects.filter(
+            follower=request.user,
+            following=user
+        ).exists()
+    
     for post in user_posts:
         post.like_count = Like.objects.filter(post=post).count()
         post.comment_count = Comment.objects.filter(post=post).count()
@@ -297,5 +338,30 @@ def user_detail(request, username):
         'posts': user_posts,
         'posts_count': user_posts.count(),
         'likes_count': Like.objects.filter(post__author=user).count(),
+        'is_following': is_following  # Adicionar ao contexto
     }
     return render(request, 'user_detail.html', context)
+
+@login_required
+def toggle_follow(request, username):
+    if request.method == 'POST':
+        try:
+            user_to_follow = User.objects.get(username=username)
+            if user_to_follow == request.user:
+                return JsonResponse({'status': 'error', 'message': 'Você não pode seguir a si mesmo'})
+
+            follow, created = UserFollow.objects.get_or_create(
+                follower=request.user,
+                following=user_to_follow
+            )
+
+            if not created:
+                follow.delete()
+                return JsonResponse({'status': 'success', 'is_following': False})
+
+            return JsonResponse({'status': 'success', 'is_following': True})
+
+        except User.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Usuário não encontrado'})
+
+    return JsonResponse({'status': 'error', 'message': 'Método não permitido'})

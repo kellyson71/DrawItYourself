@@ -20,12 +20,12 @@
 
         <div class="header-options">
             <div class="actions-container">
-                {% comment %} <form class="search-container">
-                    <input placeholder="Procurar">
-                    <button>
+                <form class="search-container" action="{% url 'main-page' %}" method="GET">
+                    <input name="search" placeholder="Procurar" value="{{ request.GET.search|default:'' }}">
+                    <button type="submit">
                         <i class="fa-solid fa-search"></i>
                     </button>
-                </form> {% endcomment %}
+                </form>
                 
                 <a href="{% url 'create-post-page' %}">
                     <button class="create-post-button">

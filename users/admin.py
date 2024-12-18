@@ -1,11 +1,15 @@
 from django.contrib import admin
-from .models import User, Message, MessageImage
+from .models import User, Message, MessageImage, UserFollow
 
 # Register your models here.
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = ['username', 'email']
     search_fields = ['username', 'email']
+
+@admin.register(UserFollow)
+class UserFollowAdmin(admin.ModelAdmin):
+    UserFollow = ['follower', 'following']
 
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):

@@ -356,6 +356,26 @@
     .remove-image:hover {
         background: rgba(255, 0, 0, 0.5);
     }
+
+    .profile-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+        justify-content: flex-start;
+    }
+
+    .action-button {
+        flex: 1;  /* Faz com que os botões ocupem espaço igual */
+        max-width: 200px;  /* Limita a largura máxima de cada botão */
+    }
+
+    .following {
+        background-color: #666 !important;
+    }
+
+    .following:hover {
+        background-color: #ff4b4b !important;
+    }
 </style>
 
 <script>
@@ -479,9 +499,21 @@
                 </div>
             </div>
             {% if user.is_authenticated and user != profile_user %}
-            <button onclick="openMessageModal()" class="custom-button full">
-                <i class="fas fa-envelope"></i> Enviar Mensagem
-            </button>
+            <div class="profile-actions">
+                <button onclick="openMessageModal()" class="custom-button full action-button">
+                    <i class="fas fa-envelope"></i> Enviar Mensagem
+                </button>
+                {% csrf_token %}
+                <button 
+                    class="custom-button full action-button {% if is_following %}following{% endif %}" 
+                    onclick="toggleFollow('{{profile_user.username}}', this)">
+                    {% if is_following %}
+                        Deixar de Seguir
+                    {% else %}
+                        Seguir Artista
+                    {% endif %}
+                </button>
+            </div>
             {% endif %}
         </div>
     </div>

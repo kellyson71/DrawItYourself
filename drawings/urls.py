@@ -19,5 +19,6 @@ urlpatterns = [
     path('favorites/', views.favorites_view, name='favorites'),
     path('likes/', views.likes_view, name='likes'),
     path('user/<str:username>/', views.user_detail, name='user_detail'),
+    path('users/follow/<str:username>/', views.toggle_follow, name='toggle_follow'),
     
 ]

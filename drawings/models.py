@@ -1,6 +1,7 @@
 from django.db import models
 
-from users.models import User
+from users.models import User, UserFollow  # Adicionar UserFollow aqui
+
 class Tag(models.Model):
     name = models.CharField(max_length=50)
 
@@ -29,6 +30,17 @@ class Post(models.Model):
 
     def is_liked_by(self, user):
         return Like.objects.filter(post=self, user=user).exists()
+
+    def is_following(self):
+        if not hasattr(self, '_current_user'):
+            return False
+        
+        if not hasattr(self, '_is_following'):
+            self._is_following = UserFollow.objects.filter(
+                follower=self._current_user,
+                following=self.author
+            ).exists()
+        return self._is_following
 
     def __str__(self) -> str:
         return f"{self.author} | {self.title}"

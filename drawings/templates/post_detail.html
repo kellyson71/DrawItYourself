@@ -93,6 +93,53 @@
         font-weight: 500;
     }
 </style>
+<script>
+function toggleFollow(username, button) {
+    fetch(`/users/follow/${username}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            if (data.is_following) {
+                button.textContent = 'Deixar de Seguir';
+                button.classList.add('following');
+            } else {
+                button.textContent = 'Seguir Artista';
+                button.classList.remove('following');
+            }
+        } else {
+            alert(data.message);
+        }
+    });
+}
+
+function addComment(postId, button) {
+    const form = button.closest('form');
+    const input = form.querySelector('input[name="content"]');
+    const content = input.value.trim();
+    
+    if (!content) return;
+
+    fetch(`/post/${postId}/comment/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `content=${encodeURIComponent(content)}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            location.reload();
+        }
+    });
+}
+</script>
 {% endblock %}
 
 {% block main %}
@@ -127,6 +174,18 @@
             </a>
         </div>
         {% endif %}
+        {% if user.is_authenticated and post.author != user %}
+            {% csrf_token %}
+            <button 
+                class="custom-button full {% if post.is_following %}following{% endif %}" 
+                onclick="toggleFollow('{{post.author.username}}', this)">
+                {% if post.is_following %}
+                    Deixar de Seguir
+                {% else %}
+                    Seguir Artista
+                {% endif %}
+            </button>
+        {% endif %}
     </header>
 
     <p class="post-description text-gray-700">{{ post.description }}</p>
@@ -138,6 +197,34 @@
             <p class="image-legend">{{ post_item.image_legend }}</p>
         </div>
         {% endfor %}
+    </div>
+
+    <div class="comments-section" style="margin-top: 2rem;">
+        <div class="comments-header">
+            <h4>Comentários ({{ post.comment_count }})</h4>
+        </div>
+        
+        <div class="comments-content visible">
+            {% for comment in post.comments %}
+            <div class="comment">
+                <div class="comment-header">
+                    <span class="comment-user">{{ comment.user.username }}</span>
+                    <span class="comment-time">{{ comment.created_at|timesince }}</span>
+                </div>
+                <div class="comment-content">
+                    {{ comment.content }}
+                </div>
+            </div>
+            {% endfor %}
+            
+            {% if user.is_authenticated %}
+            <form class="comment-form" onsubmit="event.preventDefault();">
+                {% csrf_token %}
+                <input type="text" name="content" class="comment-input" placeholder="Escreva um comentário...">
+                <button type="button" class="custom-button full" onclick="addComment({{post.id}}, this)">Comentar</button>
+            </form>
+            {% endif %}
+        </div>
     </div>
 </div>
 {% endblock %}
