@@ -472,6 +472,29 @@
             feedback.style.display = 'block';
         });
     }
+
+    function toggleFollow(username, button) {
+    fetch(`/users/follow/${username}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                if (data.is_following) {
+                    button.textContent = 'Deixar de Seguir';
+                    button.classList.add('following');
+                } else {
+                    button.textContent = 'Seguir Artista';
+                    button.classList.remove('following');
+                }
+            } else {
+                alert(data.message);
+            }
+        });
+    }
 </script>
 {% endblock %}
 
