@@ -64,11 +64,22 @@ def send_message(request, username):
 @login_required
 def inbox(request):
     messages = Message.objects.filter(
-        receiver=request.user
-    ).select_related('sender').order_by('-created_at')
+        Q(receiver=request.user) | Q(sender=request.user)
+    ).select_related('sender', 'receiver').order_by('-created_at')
+
+
+    unique_conversations = {}
+    for message in messages:
+        other_user = message.sender if message.sender != request.user else message.receiver
+        if other_user.id not in unique_conversations:
+            unique_conversations[other_user.id] = message
+
+    messages = list(unique_conversations.values())
+    messages.sort(key=lambda x: x.created_at, reverse=True)
 
     for message in messages:
         message.has_image = MessageImage.objects.filter(message=message).exists()
+        message.other_user = message.sender if message.sender != request.user else message.receiver
 
     context = {
         'messages': messages

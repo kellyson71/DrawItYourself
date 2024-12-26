@@ -141,20 +141,25 @@
     <div class="message-list">
         {% if messages %}
             {% for message in messages %}
-                <div class="message-item {% if not message.is_read %}unread{% endif %}" onclick="window.location='{% url 'users:chat_detail' message.sender.username %}'">
-                    {% if not message.is_read %}
+                <div class="message-item {% if not message.is_read and message.receiver == request.user %}unread{% endif %}" 
+                     onclick="window.location='{% url 'users:chat_detail' message.other_user.username %}'">
+                    {% if not message.is_read and message.receiver == request.user %}
                         <div class="unread-indicator"></div>
                     {% endif %}
                     <div class="sender-avatar">
-                        {{ message.sender.username.0 }}
+                        {{ message.other_user.username.0 }}
                     </div>
                     <div class="message-content">
                         <div class="message-header">
-                            <span class="sender-name">{{ message.sender.username }}</span>
+                            <span class="sender-name">{{ message.other_user.username }}</span>
                             <span class="message-time">{{ message.created_at|timesince }}</span>
                         </div>
                         <div class="message-preview">
-                            {{ message.content }}
+                            {% if message.sender == request.user %}
+                                Você: {{ message.content }}
+                            {% else %}
+                                {{ message.content }}
+                            {% endif %}
                         </div>
                     </div>
                     <div class="message-indicators">
